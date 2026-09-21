@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Obsidia — Automation for long-term rental management</title>
+<meta name="description" content="Obsidia answers applicants, screens files, books viewings, handles incidents and issues rent receipts. Plug it into your property software and let the platform take the first level." />
+<meta property="og:title" content="Obsidia — The agency that never re-keys anything" />
+<meta property="og:description" content="Automation for long-term rental management. Six modules covering the rental cycle end to end." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #08090B; color: #F5F3EF; font-family: "Schibsted Grotesk", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #C6A15B; text-decoration: none; }
+  a:hover { color: #E2C692; }
+  ::selection { background: #6E5A31; color: #F5F3EF; }
+  @keyframes obsPulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+  * { box-sizing: border-box; }
+  /* hover states (ported from the design's style-hover attributes) */
+  .obs-cta:hover { background: #E2C692 !important; }
+  .obs-outline:hover { border-color: #C6A15B !important; color: #E2C692 !important; }
+  .obs-card:hover { border-color: #6A7280 !important; }
+  .obs-faq-btn:hover { color: #E2C692 !important; }
+  input[type="range"] { accent-color: #C6A15B; }
+</style>
+</head>
+<body>
+
+<div style="background:#08090B;color:#F5F3EF;font-family:'Schibsted Grotesk',system-ui,sans-serif;overflow-x:hidden">
+
+  <header style="position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(8,9,11,0.82);border-bottom:1px solid #272C35">
+    <div style="max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:24px">
+      <a href="#top" style="display:flex;align-items:center;gap:12px;color:#F5F3EF">
+        <span style="width:26px;height:26px;display:block;background:#C6A15B;clip-path:polygon(28% 0,100% 0,100% 72%,72% 100%,0 100%,0 28%)"></span>
+        <span style="font-size:15px;font-weight:600;letter-spacing:.24em">OBSIDIA</span>
+      </a>
+      <nav style="display:flex;gap:24px;margin-left:8px;flex:1;flex-wrap:wrap">
+        <a href="#modules" style="color:#868C97;font-size:14px" data-t="navModules"></a>
+        <a href="#qualification" style="color:#868C97;font-size:14px" data-t="navQualif"></a>
+        <a href="#incidents" style="color:#868C97;font-size:14px" data-t="navIncidents"></a>
+        <a href="#pricing" style="color:#868C97;font-size:14px" data-t="navPricing"></a>
+        <a href="#faq" style="color:#868C97;font-size:14px">FAQ</a>
+      </nav>
+      <div style="display:flex;border:1px solid #272C35;border-radius:8px;overflow:hidden;flex:none">
+        <button id="lang-en" type="button" style="background:transparent;color:#868C97;border:0;padding:8px 11px;font-size:12px;font-weight:600;font-family:'IBM Plex Mono',monospace;cursor:pointer">EN</button>
+        <button id="lang-fr" type="button" style="background:transparent;color:#868C97;border:0;padding:8px 11px;font-size:12px;font-weight:600;font-family:'IBM Plex Mono',monospace;cursor:pointer">FR</button>
+      </div>
+      <a class="obs-app obs-cta" target="_blank" rel="noopener" style="background:#C6A15B;color:#08090B;font-size:14px;font-weight:600;padding:10px 18px;border-radius:8px;white-space:nowrap" data-t="ctaShort"></a>
+    </div>
+  </header>
+
+  <section id="top" style="position:relative;padding:96px 24px 72px;border-bottom:1px solid #272C35">
+    <div style="position:absolute;inset:0;background:radial-gradient(900px 420px at 18% -10%, rgba(198,161,91,0.16), transparent 70%);pointer-events:none"></div>
+    <div style="position:relative;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:56px;align-items:center">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:10px;border:1px solid #272C35;background:#14171D;border-radius:999px;padding:7px 14px;font-size:12px;color:#868C97;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">
+          <span style="width:7px;height:7px;border-radius:2px;background:#6FD8C4;animation:obsPulse 2.4s ease-in-out infinite"></span>
+          <span data-t="badge"></span>
+        </div>
+        <h1 id="obs-h1" style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(44px,5.6vw,76px);line-height:1.02;letter-spacing:-0.015em;margin:26px 0 0"></h1>
+        <p style="margin:24px 0 0;max-width:520px;font-size:17px;line-height:1.65;color:#868C97;text-wrap:pretty" data-t="heroSub"></p>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px">
+          <a class="obs-app obs-cta" target="_blank" rel="noopener" style="background:#C6A15B;color:#08090B;font-size:15px;font-weight:600;padding:14px 24px;border-radius:9px" data-t="ctaLong"></a>
+          <a class="obs-outline" href="#modules" style="border:1px solid #6A7280;color:#F5F3EF;font-size:15px;font-weight:500;padding:14px 24px;border-radius:9px" data-t="ctaModules"></a>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:28px;margin-top:36px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6A7280;letter-spacing:.04em">
+          <span data-t="heroKpi1"></span>
+          <span>24/7</span>
+          <span data-t="heroKpi3"></span>
+        </div>
+      </div>
+
+      <div style="background:#14171D;border:1px solid #272C35;border-radius:16px;padding:20px;box-shadow:0 40px 80px -40px rgba(0,0,0,0.9)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid #272C35">
+          <span style="font-size:13px;font-weight:600;color:#F5F3EF" data-t="inboxTitle"></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6FD8C4" data-t="inboxMeta"></span>
+        </div>
+        <div id="obs-inbox" style="display:flex;flex-direction:column;gap:2px;padding-top:10px"></div>
+        <div style="margin-top:14px;border-top:1px solid #272C35;padding-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280" data-t="inboxFoot1"></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B" data-t="inboxFoot2"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:28px 24px;border-bottom:1px solid #272C35;background:#08090B">
+    <div style="max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:22px 40px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280;letter-spacing:.12em" data-t="pmsLabel"></span>
+      <div style="display:flex;flex-wrap:wrap;gap:14px">
+        <span style="font-size:14px;color:#868C97">Apimo</span>
+        <span style="font-size:14px;color:#868C97">Hektor</span>
+        <span style="font-size:14px;color:#868C97">ICS</span>
+        <span style="font-size:14px;color:#868C97">Netty</span>
+        <span style="font-size:14px;color:#868C97">Roland Palace</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="modules" style="padding:88px 24px;border-bottom:1px solid #272C35">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em" data-t="modulesEyebrow"></div>
+      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(32px,4vw,50px);line-height:1.08;margin:16px 0 0;max-width:760px" data-t="modulesTitle"></h2>
+      <p style="margin:18px 0 0;max-width:620px;color:#868C97;font-size:16px;line-height:1.6" data-t="modulesSub"></p>
+      <div id="obs-modules" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-top:44px"></div>
+    </div>
+  </section>
+
+  <section id="qualification" style="padding:88px 24px;border-bottom:1px solid #272C35;background:#08090B">
+    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:56px;align-items:center">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em" data-t="qualEyebrow"></div>
+        <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:16px 0 0" data-t="qualTitle"></h2>
+        <p style="margin:18px 0 0;color:#868C97;font-size:16px;line-height:1.65;max-width:520px" data-t="qualSub"></p>
+        <div id="obs-qualchips" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:26px"></div>
+      </div>
+
+      <div style="background:#14171D;border:1px solid #272C35;border-radius:16px;padding:26px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+          <span style="font-size:13px;font-weight:600" data-t="simTitle"></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280">REF-2049-B</span>
+        </div>
+        <div style="margin-top:22px;display:flex;flex-direction:column;gap:22px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:#868C97;gap:12px"><span data-t="simIncome"></span><span id="sim-revenus" style="font-family:'IBM Plex Mono',monospace;color:#F5F3EF"></span></div>
+            <input id="sim-revenus-range" type="range" min="1200" max="8000" step="50" value="3200" style="width:100%;margin-top:10px;accent-color:#C6A15B" />
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:#868C97;gap:12px"><span data-t="simRent"></span><span id="sim-loyer" style="font-family:'IBM Plex Mono',monospace;color:#F5F3EF"></span></div>
+            <input id="sim-loyer-range" type="range" min="400" max="3000" step="10" value="980" style="width:100%;margin-top:10px;accent-color:#C6A15B" />
+          </div>
+        </div>
+        <div style="margin-top:24px;border-top:1px solid #272C35;padding-top:20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280;letter-spacing:.08em" data-t="simRatio"></div>
+            <div id="sim-taux" style="font-family:'IBM Plex Mono',monospace;font-size:42px;line-height:1.1;color:#F5F3EF"></div>
+          </div>
+          <div style="text-align:right">
+            <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #272C35;background:#08090B;border-radius:8px;padding:8px 12px;font-size:12px;color:#F5F3EF">
+              <span id="sim-status-dot" style="width:7px;height:7px;border-radius:2px;background:#6FD8C4"></span><span id="sim-status-label"></span>
+            </div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280;margin-top:8px" data-t="simThreshold"></div>
+          </div>
+        </div>
+        <div style="margin-top:18px;height:6px;border-radius:999px;background:#08090B;overflow:hidden">
+          <div id="sim-gauge" style="height:100%;border-radius:999px;background:#6FD8C4;width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="incidents" style="padding:88px 24px;border-bottom:1px solid #272C35">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em" data-t="incEyebrow"></div>
+      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:16px 0 0;max-width:720px" data-t="incTitle"></h2>
+      <div id="obs-timeline" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;margin-top:44px;background:#272C35;border:1px solid #272C35;border-radius:14px;overflow:hidden"></div>
+    </div>
+  </section>
+
+  <section id="comparaison" style="padding:88px 24px;border-bottom:1px solid #272C35;background:#08090B">
+    <div style="max-width:1180px;margin:0 auto">
+      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:0;max-width:680px" data-t="cmpTitle"></h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:40px">
+        <div style="border:1px solid #272C35;border-radius:14px;padding:28px">
+          <div style="font-size:13px;font-weight:600;color:#868C97" data-t="cmpWithout"></div>
+          <ul id="obs-cmp-without" style="margin:18px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px"></ul>
+        </div>
+        <div style="border:1px solid #C6A15B;border-radius:14px;padding:28px;background:linear-gradient(180deg, rgba(198,161,91,0.08), rgba(198,161,91,0))">
+          <div style="font-size:13px;font-weight:600;color:#E2C692" data-t="cmpWith"></div>
+          <ul id="obs-cmp-with" style="margin:18px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing" style="padding:88px 24px;border-bottom:1px solid #272C35">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em" data-t="priceEyebrow"></div>
+      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:16px 0 0;max-width:720px" data-t="priceTitle"></h2>
+      <p style="margin:18px 0 0;max-width:600px;color:#868C97;font-size:16px;line-height:1.6" data-t="priceSub"></p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-top:44px;align-items:stretch">
+        <div style="border:1px solid #C6A15B;border-radius:16px;padding:32px;background:linear-gradient(180deg, rgba(198,161,91,0.09), rgba(198,161,91,0));display:flex;flex-direction:column">
+          <div style="display:flex;align-items:baseline;gap:10px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:56px;line-height:1;color:#F5F3EF" data-t="priceBig"></span>
+            <span style="font-size:14px;color:#E2C692" data-t="priceUnit"></span>
+          </div>
+          <p style="margin:16px 0 0;color:#868C97;font-size:14px;line-height:1.6" data-t="priceNote"></p>
+          <ul id="obs-price-included" style="margin:24px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;flex:1"></ul>
+          <a class="obs-app obs-cta" target="_blank" rel="noopener" style="margin-top:28px;display:block;text-align:center;background:#C6A15B;color:#08090B;font-size:15px;font-weight:600;padding:14px 24px;border-radius:9px" data-t="ctaLong"></a>
+        </div>
+
+        <div style="background:#14171D;border:1px solid #272C35;border-radius:16px;padding:32px;display:flex;flex-direction:column">
+          <div style="font-size:13px;font-weight:600" data-t="calcTitle"></div>
+          <div style="margin-top:26px">
+            <div style="display:flex;justify-content:space-between;font-size:12px;color:#868C97;gap:12px"><span data-t="calcLots"></span><span id="calc-lots" style="font-family:'IBM Plex Mono',monospace;color:#F5F3EF"></span></div>
+            <input id="calc-lots-range" type="range" min="10" max="1000" step="10" value="120" style="width:100%;margin-top:10px;accent-color:#C6A15B" />
+          </div>
+          <div style="margin-top:28px;border-top:1px solid #272C35;padding-top:24px;display:flex;flex-direction:column;gap:14px;flex:1">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+              <span style="font-size:13px;color:#868C97" data-t="calcMonthly"></span>
+              <span id="calc-monthly" style="font-family:'IBM Plex Mono',monospace;font-size:32px;color:#C6A15B"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+              <span style="font-size:13px;color:#868C97" data-t="calcYearly"></span>
+              <span id="calc-yearly" style="font-family:'IBM Plex Mono',monospace;font-size:16px;color:#F5F3EF"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+              <span style="font-size:13px;color:#868C97" data-t="calcPerLot"></span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:16px;color:#F5F3EF" data-t="priceExact"></span>
+            </div>
+          </div>
+          <p style="margin:24px 0 0;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280;line-height:1.6" data-t="calcFoot"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:88px 24px;border-bottom:1px solid #272C35;background:#08090B">
+    <div id="obs-stats" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px"></div>
+  </section>
+
+  <section id="faq" style="padding:88px 24px;border-bottom:1px solid #272C35">
+    <div style="max-width:880px;margin:0 auto">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em">[ FAQ ]</div>
+      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:16px 0 36px" data-t="faqTitle"></h2>
+      <div id="obs-faq" style="border-top:1px solid #272C35"></div>
+    </div>
+  </section>
+
+  <section style="padding:110px 24px;position:relative;overflow:hidden">
+    <div style="position:absolute;inset:0;background:radial-gradient(700px 320px at 50% 120%, rgba(198,161,91,0.18), transparent 70%)"></div>
+    <div style="position:relative;max-width:780px;margin:0 auto;text-align:center">
+      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(34px,4.6vw,60px);line-height:1.05;margin:0" data-t="finalTitle"></h2>
+      <p style="margin:20px auto 0;max-width:520px;color:#868C97;font-size:16px;line-height:1.65" data-t="finalSub"></p>
+      <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:32px">
+        <a class="obs-app obs-cta" target="_blank" rel="noopener" style="background:#C6A15B;color:#08090B;font-size:15px;font-weight:600;padding:15px 28px;border-radius:9px" data-t="ctaLong"></a>
+        <a class="obs-outline" href="#pricing" style="border:1px solid #6A7280;color:#F5F3EF;font-size:15px;font-weight:500;padding:15px 28px;border-radius:9px" data-t="ctaPricing"></a>
+      </div>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #272C35;padding:36px 24px">
+    <div style="max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="width:20px;height:20px;display:block;background:#C6A15B;clip-path:polygon(28% 0,100% 0,100% 72%,72% 100%,0 100%,0 28%)"></span>
+        <span style="font-size:13px;font-weight:600;letter-spacing:.24em">OBSIDIA</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6A7280" data-t="tagline"></span>
+      </div>
+      <div style="display:flex;gap:22px;font-size:13px">
+        <a href="#modules" style="color:#868C97" data-t="navModules"></a>
+        <a href="#pricing" style="color:#868C97" data-t="navPricing"></a>
+        <a class="obs-app" target="_blank" rel="noopener" style="color:#C6A15B" data-t="navApp"></a>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6A7280">© 2026 Obsidia</div>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ============================================================================
+// Obsidia landing — standalone implementation of the CMH/DC "design code".
+// The original relied on a proprietary runtime (support.js); this reproduces
+// its DCLogic component (bilingual copy, simulators, FAQ) in vanilla JS.
+// ============================================================================
+
+// --- configuration (was <script> data-props on the source) -----------------
+var APP_URL = "https://obsidia.base44.app";
+var DEFAULT_LANG = "en";
+var SHOW_COMPARISON = true;
+
+// --- translations (verbatim from the source) --------------------------------
+var COPY = {
+  en: {
+    navModules: "Modules", navQualif: "Screening", navIncidents: "Incidents", navPricing: "Pricing", navApp: "App",
+    ctaShort: "Open the app", ctaLong: "Open the application", ctaModules: "See the 6 modules", ctaPricing: "See pricing",
+    badge: "Automation for long-term rental management",
+    h1a: "Your managed portfolio", h1b: "runs itself.",
+    heroSub: "Obsidia answers applicants, screens files, books viewings, handles incidents and issues rent receipts. Your team stops re-keying data — it arbitrates.",
+    heroKpi1: "100% of first-level requests", heroKpi3: "Connected to your property software",
+    inboxTitle: "Unified inbox", inboxMeta: "● 4 handled by AI",
+    inboxFoot1: "average response time · 6 s", inboxFoot2: "1,284 follow-ups this month",
+    inbox: [
+      ["WHATSAPP", "“Is the 2-bed on Gambetta street still available?”", "answered 4 s", "#6FD8C4"],
+      ["SMS", "Documents received · 4 files verified (OCR)", "score 84", "#6FD8C4"],
+      ["WIDGET", "Viewing booked — Thursday 2:30 pm, 6 applicants", "calendar synced", "#9AA3B2"],
+      ["E-MAIL", "Bathroom leak · unit 14B", "urgent", "#F0766A"]
+    ],
+    pmsLabel: "NATIVE PMS CONNECTORS",
+    modulesEyebrow: "[ THE PLATFORM ]",
+    modulesTitle: "Six modules covering the rental cycle end to end",
+    modulesSub: "From an applicant's first question to the closing of a claim, including the rent receipt and the owner's report.",
+    modules: [
+      ["MODULE 01", "Conversational engine and multichannel screening", "WhatsApp, SMS, web chat, Messenger and email in a single inbox. The text and voice agent handles 100% of first-level requests, 24/7.", ["Dynamic pre-screening questionnaire", "Automatic rent-to-income ratio calculation", "Secure upload and OCR verification of documents", "File scoring and ranking"]],
+      ["MODULE 02", "Autonomous viewing management", "Google, Outlook and Cal.com calendars synced both ways. The eligible applicant picks their own slot.", ["Self-service booking via secure link", "SMS and email reminders at D-1 and H-2", "Group viewings with a cap per slot", "Automatic feedback 1 hour after the viewing"]],
+      ["MODULE 03", "Owner portal and financial reporting", "Every landlord tracks their portfolio in real time, on web and mobile, without calling the agency.", ["Rent collection status and receipt history", "Chatbot querying the property software directly", "Occupancy rate, gross and net yields", "One-click approval of works quotes"]],
+      ["MODULE 04", "Incidents, claims and maintenance", "The tenant reports in a few clicks, photos included. The decision tree attempts an immediate fix, otherwise it qualifies the urgency.", ["Contractor directory by trade and area", "Automated quote requests with photos", "Three-way appointment scheduling", "Time-stamped timeline through to closing"]],
+      ["MODULE 05", "Administrative and legal automation", "Rent receipts, payment notices, arrears chasing and tailored legal letters generated without intervention.", ["Graduated dunning at D+3, D+10, D+15", "Alerts on index reviews, notices, charge reconciliation", "Watch on mandatory surveys (EPC, lead, gas…)", "Assisted drafting of notices and addenda"]],
+      ["MODULE 06", "Connectivity, API and audit trail", "Properties, units, leases, tenants and owners synced in real time with your PMS.", ["Apimo, Hektor, ICS, Netty, Roland Palace connectors", "Tamper-proof audit log of every action", "Steering: AI volume, conversion, workload avoided"]]
+    ],
+    qualEyebrow: "[ SCREENING ]",
+    qualTitle: "The rent-to-income ratio is computed before you open the file",
+    qualSub: "Net income, contract type, probation period, guarantor or state guarantee: the funnel collects live and cross-checks against the rent including charges. Eligibility shows instantly, the file is scored, ranked, and documents are OCR-verified.",
+    qualChips: ["Permanent contract", "Fixed-term", "Self-employed", "Student", "State guarantee"],
+    simTitle: "Affordability simulator", simIncome: "Household net income", simRent: "Rent including charges",
+    simRatio: "RENT-TO-INCOME", simThreshold: "agency threshold · 33%",
+    ok: "Eligible", mid: "To review", ko: "Outside criteria",
+    incEyebrow: "[ INCIDENTS ]",
+    incTitle: "From report to closing, without a single phone call",
+    timeline: [
+      ["01 · 09:12", "#F0766A", "Report", "The tenant describes the leak, picks “plumbing” and attaches two photos."],
+      ["02 · 09:13", "#9AA3B2", "Guided diagnosis", "The decision tree rules out a false alarm and qualifies it as absolute urgency."],
+      ["03 · 09:21", "#9AA3B2", "Quotes requested", "Three plumbers in the area receive the description and the photos."],
+      ["04 · 11:40", "#9AA3B2", "Owner approval", "The landlord approves the selected quote in one click from their portal."],
+      ["05 · 14:05", "#6FD8C4", "Job done and closed", "Slot matched across contractor, tenant and agency, then timeline archived."]
+    ],
+    cmpTitle: "The same week of management, with and without Obsidia",
+    cmpWithout: "Without Obsidia", cmpWith: "With Obsidia",
+    without: [
+      "The same questions repeated all day across five channels",
+      "Incomplete files sorted by hand, document by document",
+      "Viewings arranged by phone, and applicants who never show up",
+      "An owner calling to ask whether the rent came in",
+      "Missed arrears reminders and lease deadlines slipping by"
+    ],
+    with: [
+      "A single inbox, instant answers 24/7",
+      "Files OCR-verified, scored and ranked automatically",
+      "Self-service viewings, D-1 and H-2 reminders, post-visit feedback",
+      "Landlords check collections and approve quotes on their own",
+      "Graduated dunning and alerts on index, notices, surveys, guarantees"
+    ],
+    priceEyebrow: "[ PRICING ]",
+    priceTitle: "€10 per month, per managed unit",
+    priceSub: "One price, every module included. No setup fee, no per-seat licence, no commitment — you pay for the units actually under management.",
+    priceBig: "€10", priceExact: "€10.00",
+    priceUnit: "/ month / managed unit",
+    priceNote: "Billed monthly on the number of units in your portfolio. Add or remove units at any time.",
+    priceIncluded: [
+      "All six modules, no option to unlock",
+      "Unlimited users in the agency",
+      "Unlimited conversations, text and voice, 24/7",
+      "Native PMS connector included",
+      "Owner and tenant portals included",
+      "Full audit trail and steering dashboard"
+    ],
+    calcTitle: "Estimate your cost", calcLots: "Units under management",
+    calcMonthly: "Monthly", calcYearly: "Yearly", calcPerLot: "Per unit",
+    calcFoot: "Indicative estimate, excl. VAT · €10 / unit / month",
+    stats: [
+      ["100%", "of first-level requests handled without a manager"],
+      ["24/7", "text and voice agent, weekends and nights included"],
+      ["D+3", "first amicable reminder triggered on arrears"],
+      ["0", "re-keying: everything flows back into your property software"]
+    ],
+    faqTitle: "Frequently asked questions",
+    faq: [
+      ["Does Obsidia replace my property management software?", "No. Obsidia plugs into it. Native connectors (Apimo, Hektor, ICS, Netty, Roland Palace…) sync properties, units, leases, tenants and owners in real time. Your property software stays the source of truth."],
+      ["How is the rent-to-income ratio calculated?", "The pre-screening funnel collects household net income, contract type, probation period and whether there is a guarantor or a state guarantee, then cross-checks against the rent including charges. The threshold (33% or 36%) is configurable per agency and eligibility shows instantly."],
+      ["Are supporting documents really verified?", "Applicants upload documents through a secure interface. OCR reads payslips, tax notices, ID and proof of address, then checks consistency and authenticity before scoring the file."],
+      ["What happens with a technical emergency at night?", "The reporting portal is open 24/7. Guided diagnosis rules out false alarms, qualifies severity (absolute emergency, rapid intervention, standard maintenance) and triggers quote requests to contractors in the area, with an alert to the manager."],
+      ["Do we stay in control of decisions?", "Yes. Obsidia takes the first level and prepares the decision: the manager arbitrates, the owner approves quotes. Every action, message and document is written to a tamper-proof audit log."],
+      ["What does €10 per unit actually cover?", "Every module, unlimited agency users, unlimited text and voice conversations, the PMS connector and both the owner and tenant portals. Billing follows the number of units under management, month by month."]
+    ],
+    finalTitle: "The agency that never re-keys anything.",
+    finalSub: "Plug Obsidia into your management software and let the platform take the first level, from screening to rent receipt.",
+    tagline: "Automation for real estate"
+  },
+  fr: {
+    navModules: "Modules", navQualif: "Qualification", navIncidents: "Incidents", navPricing: "Tarif", navApp: "Application",
+    ctaShort: "Ouvrir l'app", ctaLong: "Ouvrir l'application", ctaModules: "Voir les 6 modules", ctaPricing: "Voir le tarif",
+    badge: "Automatisation pour la gestion locative longue durée",
+    h1a: "Vos mandats de gestion", h1b: "se gèrent seuls.",
+    heroSub: "Obsidia répond aux candidats, qualifie les dossiers, planifie les visites, traite les incidents et sort les quittances. Votre équipe ne ressaisit plus rien — elle arbitre.",
+    heroKpi1: "100% des requêtes de niveau 1", heroKpi3: "Connecté à votre logiciel métier",
+    inboxTitle: "Boîte de réception unifiée", inboxMeta: "● 4 traitées par l'IA",
+    inboxFoot1: "temps moyen de réponse · 6 s", inboxFoot2: "1 284 relances ce mois",
+    inbox: [
+      ["WHATSAPP", "« Le T3 rue Gambetta est encore libre ? »", "répondu 4 s", "#6FD8C4"],
+      ["SMS", "Pièces reçues · 4 documents vérifiés (OCR)", "score 84", "#6FD8C4"],
+      ["WIDGET", "Visite réservée — jeudi 14h30, 6 candidats", "agenda synchro", "#9AA3B2"],
+      ["E-MAIL", "Fuite salle de bain · lot 14B", "urgence", "#F0766A"]
+    ],
+    pmsLabel: "CONNECTEURS NATIFS PMS",
+    modulesEyebrow: "[ LA PLATEFORME ]",
+    modulesTitle: "Six modules qui couvrent le cycle locatif de bout en bout",
+    modulesSub: "De la première question d'un candidat à la clôture d'un sinistre, en passant par la quittance et le rapport au propriétaire.",
+    modules: [
+      ["MODULE 01", "Moteur conversationnel et qualification multicanal", "WhatsApp, SMS, chat web, Messenger et e-mail dans une seule boîte. L'agent texte et voix traite 100% des requêtes de premier niveau, 24/7.", ["Questionnaire dynamique de pré-qualification", "Calcul automatique du taux d'effort", "Upload sécurisé et vérification OCR des pièces", "Scorage et classement des dossiers"]],
+      ["MODULE 02", "Gestion autonome des visites", "Agendas Google, Outlook et Cal.com synchronisés dans les deux sens. Le candidat éligible choisit lui-même son créneau.", ["Réservation en self-service par lien sécurisé", "Rappels SMS et e-mail à J-1 et H-2", "Visites groupées avec quota par créneau", "Feedback automatique 1 h après la visite"]],
+      ["MODULE 03", "Portail propriétaire et restitution financière", "Chaque bailleur suit son parc en temps réel, web et mobile, sans appeler l'agence.", ["Statut des encaissements et historique des quittances", "Chatbot interrogeant directement le logiciel métier", "Taux d'occupation, rendements bruts et nets", "Validation des devis de travaux en un clic"]],
+      ["MODULE 04", "Incidents, sinistres et maintenance", "Le locataire déclare en quelques clics, photos comprises. L'arbre de décision tente la résolution immédiate, sinon il qualifie l'urgence.", ["Annuaire des prestataires par métier et zone", "Demande de devis automatisée avec photos", "Planification tripartite du rendez-vous", "Timeline horodatée jusqu'à la clôture"]],
+      ["MODULE 05", "Automatisation administrative et juridique", "Quittances, avis d'échéance, relances d'impayés et actes personnalisés générés sans intervention.", ["Dunning gradué J+3, J+10, J+15", "Alertes IRL, préavis, régularisation de charges", "Veille sur les diagnostics obligatoires (DPE, CREP, gaz…)", "Rédaction assistée des congés et avenants"]],
+      ["MODULE 06", "Connectivité, API et traçabilité", "Biens, lots, baux, locataires et propriétaires synchronisés en temps réel avec votre PMS.", ["Connecteurs Apimo, Hektor, ICS, Netty, Roland Palace", "Journal d'audit infalsifiable de chaque action", "Pilotage : volumétrie IA, conversion, charge évitée"]]
+    ],
+    qualEyebrow: "[ QUALIFICATION ]",
+    qualTitle: "Le taux d'effort est calculé avant que vous ouvriez le dossier",
+    qualSub: "Revenus nets, type de contrat, période d'essai, garant ou Visale : le tunnel collecte en direct et croise avec le loyer charges comprises. L'éligibilité s'affiche immédiatement, le dossier est scoré, classé, et les pièces sont vérifiées par OCR.",
+    qualChips: ["CDI", "CDD", "Indépendant", "Étudiant", "Garantie Visale"],
+    simTitle: "Simulateur de solvabilité", simIncome: "Revenus nets du foyer", simRent: "Loyer charges comprises",
+    simRatio: "TAUX D'EFFORT", simThreshold: "seuil agence · 33%",
+    ok: "Éligible", mid: "À arbitrer", ko: "Hors critères",
+    incEyebrow: "[ INCIDENTS ]",
+    incTitle: "Du signalement à la clôture, sans un seul appel téléphonique",
+    timeline: [
+      ["01 · 09:12", "#F0766A", "Signalement", "Le locataire décrit la fuite, choisit « plomberie » et joint deux photos."],
+      ["02 · 09:13", "#9AA3B2", "Diagnostic guidé", "L'arbre de décision écarte la fausse alerte et qualifie l'urgence absolue."],
+      ["03 · 09:21", "#9AA3B2", "Devis demandé", "Trois plombiers de la zone reçoivent la description et les photos."],
+      ["04 · 11:40", "#9AA3B2", "Validation bailleur", "Le propriétaire valide le devis retenu en un clic depuis son espace."],
+      ["05 · 14:05", "#6FD8C4", "Intervention et clôture", "Créneau croisé prestataire / locataire / agence, puis timeline archivée."]
+    ],
+    cmpTitle: "La même semaine de gestion, avec et sans Obsidia",
+    cmpWithout: "Sans Obsidia", cmpWith: "Avec Obsidia",
+    without: [
+      "Les mêmes questions répétées toute la journée sur cinq canaux",
+      "Des dossiers incomplets triés à la main, pièce par pièce",
+      "Des visites calées par téléphone, et des candidats qui ne viennent pas",
+      "Un propriétaire qui rappelle pour savoir si le loyer est tombé",
+      "Des relances d'impayés oubliées et des échéances de bail qui passent"
+    ],
+    with: [
+      "Une seule boîte de réception, réponses instantanées 24/7",
+      "Dossiers vérifiés par OCR, scorés et classés automatiquement",
+      "Visites en self-service, rappels J-1 et H-2, feedback post-visite",
+      "Le bailleur consulte ses encaissements et valide ses devis seul",
+      "Dunning gradué et alertes IRL, préavis, diagnostics, GLI"
+    ],
+    priceEyebrow: "[ TARIF ]",
+    priceTitle: "10 € par mois, par lot géré",
+    priceSub: "Un seul prix, tous les modules inclus. Pas de frais d'installation, pas de licence par utilisateur, sans engagement — vous payez les lots réellement sous gestion.",
+    priceBig: "10 €", priceExact: "10,00 €",
+    priceUnit: "/ mois / lot géré",
+    priceNote: "Facturé au mois sur le nombre de lots de votre portefeuille. Ajoutez ou retirez des lots à tout moment.",
+    priceIncluded: [
+      "Les six modules, aucune option à débloquer",
+      "Utilisateurs illimités dans l'agence",
+      "Conversations illimitées, texte et voix, 24/7",
+      "Connecteur PMS natif inclus",
+      "Espaces propriétaire et locataire inclus",
+      "Journal d'audit complet et tableau de pilotage"
+    ],
+    calcTitle: "Estimez votre coût", calcLots: "Lots sous gestion",
+    calcMonthly: "Par mois", calcYearly: "Par an", calcPerLot: "Par lot",
+    calcFoot: "Estimation indicative, hors taxes · 10 € / lot / mois",
+    stats: [
+      ["100%", "des requêtes de premier niveau traitées sans gestionnaire"],
+      ["24/7", "agent texte et voix, y compris le week-end et la nuit"],
+      ["J+3", "première relance amiable déclenchée à l'impayé"],
+      ["0", "ressaisie : tout repart dans votre logiciel métier"]
+    ],
+    faqTitle: "Les questions fréquentes",
+    faq: [
+      ["Obsidia remplace-t-il mon logiciel de gestion locative ?", "Non. Obsidia se branche dessus. Les connecteurs natifs (Apimo, Hektor, ICS, Netty, Roland Palace…) synchronisent en temps réel les biens, les lots, les baux, les locataires et les propriétaires. Votre logiciel métier reste la source de vérité."],
+      ["Comment le taux d'effort est-il calculé ?", "Le tunnel de pré-qualification collecte les revenus nets du foyer, le type de contrat, la période d'essai et la présence d'un garant ou d'une garantie Visale, puis les croise avec le loyer charges comprises du bien. Le seuil (33% ou 36%) est paramétrable par l'agence et le statut d'éligibilité s'affiche immédiatement."],
+      ["Les pièces justificatives sont-elles réellement vérifiées ?", "Les candidats déposent leurs documents dans une interface sécurisée. L'OCR lit les bulletins de salaire, avis d'imposition, pièces d'identité et justificatifs de domicile, puis contrôle la cohérence et l'authenticité avant de scorer le dossier."],
+      ["Que se passe-t-il en cas d'urgence technique la nuit ?", "Le portail de signalement est ouvert 24/7. Le diagnostic guidé écarte les fausses alertes, qualifie la gravité (urgence absolue, intervention rapide, maintenance standard) et déclenche la demande de devis auprès des prestataires de la zone, avec alerte au gestionnaire."],
+      ["Gardons-nous la main sur les décisions ?", "Oui. Obsidia prend le premier niveau et prépare la décision : c'est le gestionnaire qui arbitre, et le propriétaire qui valide les devis. Chaque action, message et document est enregistré dans un journal d'audit infalsifiable."],
+      ["Que couvre exactement le tarif de 10 € par lot ?", "Tous les modules, les utilisateurs illimités de l'agence, les conversations texte et voix illimitées, le connecteur PMS et les espaces propriétaire et locataire. La facturation suit le nombre de lots sous gestion, mois par mois."]
+    ],
+    finalTitle: "L'agence qui ne ressaisit plus rien.",
+    finalSub: "Branchez Obsidia sur votre logiciel de gestion et laissez la plateforme prendre le premier niveau, de la qualification à la quittance.",
+    tagline: "Automatisation pour l'immobilier"
+  }
+};
+
+// --- state ------------------------------------------------------------------
+var state = { lang: DEFAULT_LANG, open: 0 };
+
+// --- helpers ----------------------------------------------------------------
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  });
+}
+function fmtMoney(n, lang) {
+  var loc = lang === "fr" ? "fr-FR" : "en-GB";
+  return new Intl.NumberFormat(loc, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
+}
+function fmtNum(n, lang) {
+  var loc = lang === "fr" ? "fr-FR" : "en-GB";
+  return new Intl.NumberFormat(loc).format(n);
+}
+function $(sel) { return document.querySelector(sel); }
+
+// --- element refs -----------------------------------------------------------
+var elRev = $("#sim-revenus-range"), elLoyer = $("#sim-loyer-range"), elLots = $("#calc-lots-range");
+
+// --- rendering --------------------------------------------------------------
+function fillText(t) {
+  document.querySelectorAll("[data-t]").forEach(function (el) {
+    el.textContent = t[el.getAttribute("data-t")];
+  });
+  $("#obs-h1").innerHTML = esc(t.h1a) + "<br />" + esc(t.h1b);
+  document.documentElement.lang = state.lang;
+}
+
+function buildLists(t) {
+  // Inbox
+  $("#obs-inbox").innerHTML = t.inbox.map(function (r, i) {
+    var bg = i === 0 ? "#08090B" : "transparent";
+    return '<div style="display:grid;grid-template-columns:70px 1fr auto;gap:14px;align-items:center;padding:13px 10px;border-radius:9px;background:' + bg + '">' +
+      '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#6A7280;letter-spacing:.08em">' + esc(r[0]) + '</span>' +
+      '<span style="font-size:13px;color:#F5F3EF">' + esc(r[1]) + '</span>' +
+      '<span style="font-size:11px;font-family:\'IBM Plex Mono\',monospace;color:' + r[3] + '">' + esc(r[2]) + '</span>' +
+      '</div>';
+  }).join("");
+
+  // Modules
+  $("#obs-modules").innerHTML = t.modules.map(function (m) {
+    var points = m[3].map(function (p) {
+      return '<li style="font-size:13px;color:#F5F3EF;display:flex;gap:10px"><span style="color:#6E5A31">—</span>' + esc(p) + '</li>';
+    }).join("");
+    return '<div class="obs-card" style="background:#14171D;border:1px solid #272C35;border-radius:14px;padding:26px">' +
+      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#C6A15B">' + esc(m[0]) + '</div>' +
+      '<h3 style="font-size:19px;font-weight:600;margin:12px 0 10px;line-height:1.25">' + esc(m[1]) + '</h3>' +
+      '<p style="margin:0 0 16px;color:#868C97;font-size:14px;line-height:1.6">' + esc(m[2]) + '</p>' +
+      '<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px">' + points + '</ul>' +
+      '</div>';
+  }).join("");
+
+  // Qualification chips
+  $("#obs-qualchips").innerHTML = t.qualChips.map(function (c) {
+    return '<span style="border:1px solid #272C35;border-radius:999px;padding:7px 14px;font-size:12px;color:#868C97">' + esc(c) + '</span>';
+  }).join("");
+
+  // Incident timeline
+  $("#obs-timeline").innerHTML = t.timeline.map(function (s) {
+    return '<div style="background:#14171D;padding:24px">' +
+      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:' + s[1] + '">' + esc(s[0]) + '</div>' +
+      '<div style="font-size:15px;font-weight:600;margin-top:10px">' + esc(s[2]) + '</div>' +
+      '<p style="margin:8px 0 0;font-size:13px;color:#868C97;line-height:1.55">' + esc(s[3]) + '</p>' +
+      '</div>';
+  }).join("");
+
+  // Comparison
+  $("#obs-cmp-without").innerHTML = t.without.map(function (x) {
+    return '<li style="display:flex;gap:12px;font-size:14px;color:#868C97;line-height:1.5"><span style="color:#F0766A">×</span>' + esc(x) + '</li>';
+  }).join("");
+  $("#obs-cmp-with").innerHTML = t.with.map(function (x) {
+    return '<li style="display:flex;gap:12px;font-size:14px;color:#F5F3EF;line-height:1.5"><span style="color:#6FD8C4">✓</span>' + esc(x) + '</li>';
+  }).join("");
+
+  // Price included
+  $("#obs-price-included").innerHTML = t.priceIncluded.map(function (x) {
+    return '<li style="display:flex;gap:12px;font-size:14px;color:#F5F3EF;line-height:1.5"><span style="color:#6FD8C4">✓</span>' + esc(x) + '</li>';
+  }).join("");
+
+  // Stats
+  $("#obs-stats").innerHTML = t.stats.map(function (s) {
+    return '<div style="background:#14171D;border:1px solid #272C35;border-radius:14px;padding:28px">' +
+      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:38px;color:#C6A15B">' + esc(s[0]) + '</div>' +
+      '<div style="font-size:14px;color:#868C97;margin-top:10px;line-height:1.5">' + esc(s[1]) + '</div>' +
+      '</div>';
+  }).join("");
+
+  // FAQ
+  $("#obs-faq").innerHTML = t.faq.map(function (f, i) {
+    var opened = state.open === i;
+    return '<div data-faq-item="' + i + '" style="border-bottom:1px solid #272C35">' +
+      '<button data-faq="' + i + '" type="button" class="obs-faq-btn" style="width:100%;background:transparent;border:0;padding:22px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;text-align:left;color:#F5F3EF;font-family:\'Schibsted Grotesk\',sans-serif;font-size:16px;font-weight:500;cursor:pointer">' +
+      '<span>' + esc(f[0]) + '</span>' +
+      '<span data-faq-sign style="color:#C6A15B;font-family:\'IBM Plex Mono\',monospace;font-size:18px;flex:none">' + (opened ? "−" : "+") + '</span>' +
+      '</button>' +
+      '<div data-faq-panel style="max-height:' + (opened ? "340px" : "0px") + ';overflow:hidden;transition:max-height .32s ease">' +
+      '<p style="margin:0;padding:0 40px 24px 0;color:#868C97;font-size:15px;line-height:1.65">' + esc(f[1]) + '</p>' +
+      '</div>' +
+      '</div>';
+  }).join("");
+}
+
+function updateFaqOpen() {
+  document.querySelectorAll("[data-faq-item]").forEach(function (item) {
+    var i = +item.getAttribute("data-faq-item");
+    var opened = state.open === i;
+    item.querySelector("[data-faq-sign]").textContent = opened ? "−" : "+";
+    item.querySelector("[data-faq-panel]").style.maxHeight = opened ? "340px" : "0px";
+  });
+}
+
+function updateSim() {
+  var lang = state.lang, t = COPY[lang];
+  var revenus = +elRev.value, loyer = +elLoyer.value;
+  var taux = (loyer / revenus) * 100;
+  var ok = taux <= 33, mid = taux > 33 && taux <= 36;
+  var color = ok ? "#6FD8C4" : (mid ? "#C6A15B" : "#F0766A");
+  $("#sim-revenus").textContent = fmtMoney(revenus, lang);
+  $("#sim-loyer").textContent = fmtMoney(loyer, lang);
+  $("#sim-taux").textContent = taux.toFixed(1).replace(".", lang === "fr" ? "," : ".") + " %";
+  $("#sim-status-dot").style.background = color;
+  $("#sim-status-label").textContent = ok ? t.ok : (mid ? t.mid : t.ko);
+  var gauge = $("#sim-gauge");
+  gauge.style.background = color;
+  gauge.style.width = Math.min(100, taux * 2) + "%";
+}
+
+function updateCalc() {
+  var lang = state.lang;
+  var lots = +elLots.value, monthly = lots * 10;
+  $("#calc-lots").textContent = fmtNum(lots, lang);
+  $("#calc-monthly").textContent = fmtMoney(monthly, lang) + (lang === "fr" ? " / mois" : " / mo");
+  $("#calc-yearly").textContent = fmtMoney(monthly * 12, lang);
+}
+
+function updateLangButtons() {
+  var en = $("#lang-en"), fr = $("#lang-fr");
+  en.style.background = state.lang === "en" ? "#C6A15B" : "transparent";
+  en.style.color = state.lang === "en" ? "#08090B" : "#868C97";
+  fr.style.background = state.lang === "fr" ? "#C6A15B" : "transparent";
+  fr.style.color = state.lang === "fr" ? "#08090B" : "#868C97";
+}
+
+function applyLang(lang) {
+  state.lang = lang;
+  try { localStorage.setItem("obsidia.lang", lang); } catch (e) {}
+  var t = COPY[lang] || COPY.en;
+  fillText(t);
+  buildLists(t);
+  updateSim();
+  updateCalc();
+  updateLangButtons();
+}
+
+// --- init -------------------------------------------------------------------
+(function init() {
+  // app links
+  document.querySelectorAll(".obs-app").forEach(function (a) { a.setAttribute("href", APP_URL); });
+  // comparison toggle
+  if (!SHOW_COMPARISON) { var cmp = $("#comparaison"); if (cmp) cmp.style.display = "none"; }
+  // saved language
+  var saved = null;
+  try { saved = localStorage.getItem("obsidia.lang"); } catch (e) {}
+  state.lang = (saved === "fr" || saved === "en") ? saved : DEFAULT_LANG;
+  // wire controls
+  $("#lang-en").addEventListener("click", function () { applyLang("en"); });
+  $("#lang-fr").addEventListener("click", function () { applyLang("fr"); });
+  elRev.addEventListener("input", updateSim);
+  elLoyer.addEventListener("input", updateSim);
+  elLots.addEventListener("input", updateCalc);
+  $("#obs-faq").addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-faq]");
+    if (!btn) return;
+    var i = +btn.getAttribute("data-faq");
+    state.open = state.open === i ? -1 : i;
+    updateFaqOpen();
+  });
+  // first paint
+  applyLang(state.lang);
+})();
+</script>
+</body>
+</html>
