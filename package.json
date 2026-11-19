@@ -1,0 +1,6 @@
+{
+  "name": "obsidia-site",
+  "private": true,
+  "type": "module",
+  "description": "Static landing page and demo app. middleware.js gates /app behind DEMO_PASSWORD on Vercel."
+}

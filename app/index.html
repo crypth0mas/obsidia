@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Obsidia — Demo</title>
+<meta name="description" content="Obsidia demo: the AI agent that answers calls and messages, rates applicants, fills the CRM and handles tenants." />
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#F5F3EF" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='28,0 100,0 100,72 72,100 0,100 0,28' fill='%23C6A15B'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap" rel="stylesheet" />
+<script>
+  try { if (localStorage.getItem("obsidia.theme") === "dark") document.documentElement.removeAttribute("data-theme"); } catch (e) {}
+</script>
+<link rel="stylesheet" href="app.css" />
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-today" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13.5 6.5 5h11L20 13.5V19H4z"/><path d="M4 13.5h4.5l1 2h5l1-2H20"/></symbol>
+  <symbol id="i-rank" viewBox="0 0 24 24"><path d="M4 6.5h9M4 12h6.5M4 17.5h4"/><path d="M17.5 18V6m-3 3 3-3 3 3"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6M5 12v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6"/></symbol>
+  <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 5.6a3.2 3.2 0 0 1 0 5.8M17.5 14.2A5.5 5.5 0 0 1 20.5 19"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z"/><path d="M10 20v-5.5h4V20"/></symbol>
+  <symbol id="i-ask" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4.5-2 1.3a10 10 0 0 0 5.7 5.7l1.3-2 4.5 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 5.5a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/></symbol>
+  <symbol id="i-sms" viewBox="0 0 24 24"><path d="M4.5 5.5h15v10h-9l-4.5 3.5v-3.5h-1.5z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4.5 7.5 7.5 5.5 7.5-5.5"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2z"/><path d="M9 8.5h6M9 12.5h6"/></symbol>
+  <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5 5L11 20a2.1 2.1 0 0 1-3-3z"/><path d="M14.7 6.3 17 4l3 3-2.3 2.3"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15.5" r="3.8"/><path d="m10.8 12.7 8.2-8.2M16 7.5l2.2 2.2M13.6 9.9l1.6 1.6"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6.5 20V4.5h8V20M4 20h16"/><path d="M11.5 12.5h.01"/><path d="M17.5 9.5v5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M4.5 12 19.5 4.5 15 19.5l-3-6z"/><path d="m12 13.5 7.5-9"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7.5 5.5v13l11-6.5z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m5-5-5 5 5 5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"/></symbol>
+  <symbol id="i-sound" viewBox="0 0 24 24"><path d="M4.5 9.5h3.5l4.5-4v13l-4.5-4H4.5z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></symbol>
+  <symbol id="i-mute" viewBox="0 0 24 24"><path d="M4.5 9.5h3.5l4.5-4v13l-4.5-4H4.5z"/><path d="m16 9.5 5 5M21 9.5l-5 5"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3L4.5 9"/><path d="M4.5 4.5V9H9"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4.5h5.5V10M19.5 4.5 11 13"/><path d="M18 14v5.5H4.5V6H10"/></symbol>
+</svg>
+
+<div class="shell">
+  <aside class="side">
+    <a class="logo" href="#/today" aria-label="Obsidia, today"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">Obsidia</span></a>
+    <nav class="nav" aria-label="Main" id="nav">
+      <a href="#/today" data-r="today"><svg class="i"><use href="#i-today"/></svg>Today</a>
+      <a href="#/inbox" data-r="inbox"><svg class="i"><use href="#i-inbox"/></svg>Inbox<span class="count num" data-count="inbox"></span></a>
+      <a href="#/applicants" data-r="applicants"><svg class="i"><use href="#i-rank"/></svg>Applicants<span class="count num" data-count="applicants"></span></a>
+      <a href="#/crm" data-r="crm"><svg class="i"><use href="#i-db"/></svg>CRM<span class="count num" data-count="crm"></span></a>
+      <a href="#/tenants" data-r="tenants"><svg class="i"><use href="#i-people"/></svg>Tenants<span class="count num" data-count="tenants"></span></a>
+      <a href="#/properties" data-r="properties"><svg class="i"><use href="#i-home"/></svg>Properties<span class="count num" data-count="properties"></span></a>
+      <a href="#/assistant" data-r="assistant"><svg class="i"><use href="#i-ask"/></svg>Assistant</a>
+    </nav>
+    <div class="side-foot">
+      <div class="agency"><b id="agencyName">Demo agency</b><span id="agencyMeta">5 properties</span></div>
+      <div class="side-actions">
+        <a class="btn btn-ghost btn-sm" href="../"><svg class="i"><use href="#i-out"/></svg>Website</a>
+        <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch theme"><svg class="i i-moon"><use href="#i-moon"/></svg><svg class="i i-sun"><use href="#i-sun"/></svg></button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <a class="logo" href="#/today" aria-label="Obsidia, today"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">Obsidia</span></a>
+      <p class="crumb" id="crumb"></p>
+      <div class="top-right">
+        <span class="demo-note demo-label"><i></i>Demo data</span>
+        <button class="icon-btn sound-btn" type="button" id="soundBtn" aria-pressed="true" aria-label="Mute the voices" hidden><svg class="i i-sound"><use href="#i-sound"/></svg><svg class="i i-mute"><use href="#i-mute"/></svg></button>
+        <div class="demo">
+          <button class="btn btn-secondary btn-sm" type="button" id="demoBtn" aria-expanded="false" aria-controls="demoMenu"><svg class="i"><use href="#i-play"/></svg>Run demo</button>
+          <div class="menu" id="demoMenu" role="menu"></div>
+        </div>
+        <button class="icon-btn theme-toggle show-sm" type="button" data-theme-toggle aria-label="Switch theme"><svg class="i i-moon"><use href="#i-moon"/></svg><svg class="i i-sun"><use href="#i-sun"/></svg></button>
+      </div>
+    </header>
+    <main class="view" id="view" tabindex="-1"></main>
+  </div>
+</div>
+
+<nav class="tabbar" aria-label="Main" id="tabbar">
+  <a href="#/today" data-r="today"><svg class="i"><use href="#i-today"/></svg>Today</a>
+  <a href="#/inbox" data-r="inbox"><svg class="i"><use href="#i-inbox"/></svg>Inbox</a>
+  <a href="#/applicants" data-r="applicants"><svg class="i"><use href="#i-rank"/></svg>Files</a>
+  <a href="#/crm" data-r="crm"><svg class="i"><use href="#i-db"/></svg>CRM</a>
+  <a href="#/tenants" data-r="tenants"><svg class="i"><use href="#i-people"/></svg>Tenants</a>
+  <a href="#/properties" data-r="properties"><svg class="i"><use href="#i-home"/></svg>Flats</a>
+  <a href="#/assistant" data-r="assistant"><svg class="i"><use href="#i-ask"/></svg>Ask</a>
+</nav>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-hidden="true" tabindex="-1"></aside>
+<div class="modal" id="modal" role="dialog" aria-modal="true" hidden></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
