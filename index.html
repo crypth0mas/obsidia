@@ -322,6 +322,8 @@ p { text-wrap: pretty; }
 .rank-head span { font: 500 11px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ash); }
 .rank-row { padding: 11px 4px; border-bottom: 1px solid var(--line); font-size: 14px; }
 .rank-row .r { font: 500 13px/1 var(--font-mono); color: var(--ash); }
+.rank-row.extra { display: none; }
+.rank-row.extra.fit { display: grid; }
 .rank-row .name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rank-row .c { color: var(--ash); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rank-row .c.good { color: var(--ivory); }
@@ -917,6 +919,7 @@ input[type=range] { height: 32px; }
   transition: color .2s ease, transform .45s var(--ease-spring);
 }
 .seg .i { width: 15px; height: 15px; }
+@container (max-width: 320px) { .call .seg { padding: 0 9px; font-size: 12.5px; } }
 .seg:hover { color: var(--ivory); }
 .seg.is-on, .seg.is-on:hover { color: #08090B; }
 .seg:active { transform: scale(.94); transition-duration: .2s, var(--t-press); }
@@ -970,6 +973,9 @@ input[type=range] { height: 32px; }
 .outcomes .pill .i { width: 13px; height: 13px; color: var(--teal); }
 [data-theme="light"] .outcomes .pill .i { color: #23806F; }
 .outcomes .pill.pop { animation: pop .5s var(--ease-spring) backwards; }
+/* Outcomes are listed from the start, dashed until the agent has collected them */
+.outcomes .pill.pending { border-style: dashed; color: var(--steel); }
+.outcomes .pill.pending .i { color: var(--steel); opacity: .5; }
 
 @media (max-width: 760px) {
   .orb { width: 60px; height: 60px; }
@@ -1160,7 +1166,14 @@ input[type=range] { height: 32px; }
           <div class="rank-row"><span class="r num">1</span><span class="name">Sophie Laurent</span><span class="c good num">3.6×</span><span class="c good col-contract">Permanent</span><span class="c good col-guar">Visale</span><span class="c good col-file num">100%</span><span class="score"><b class="num">94</b><span class="bar"><i style="width:94%"></i></span></span></div>
           <div class="rank-row"><span class="r num">2</span><span class="name">Mehdi Arfaoui</span><span class="c good num">3.2×</span><span class="c good col-contract">Permanent</span><span class="c good col-guar">Parent</span><span class="c good col-file num">100%</span><span class="score"><b class="num">91</b><span class="bar"><i style="width:91%"></i></span></span></div>
           <div class="rank-row"><span class="r num">3</span><span class="name">Clara Weber</span><span class="c good num">3.1×</span><span class="c good col-contract">Civil servant</span><span class="c col-guar">None</span><span class="c good col-file num">95%</span><span class="score"><b class="num">88</b><span class="bar"><i style="width:88%"></i></span></span></div>
-          <div class="rank-more">Ranks 4 to 10 invited as well</div>
+          <div class="rank-row extra"><span class="r num">4</span><span class="name">Thomas Girard</span><span class="c good num">3.0×</span><span class="c good col-contract">Permanent</span><span class="c good col-guar">Visale</span><span class="c good col-file num">100%</span><span class="score"><b class="num">86</b><span class="bar"><i style="width:86%"></i></span></span></div>
+          <div class="rank-row extra"><span class="r num">5</span><span class="name">Inès Benali</span><span class="c good num">3.0×</span><span class="c good col-contract">Permanent</span><span class="c good col-guar">Parent</span><span class="c good col-file num">95%</span><span class="score"><b class="num">84</b><span class="bar"><i style="width:84%"></i></span></span></div>
+          <div class="rank-row extra"><span class="r num">6</span><span class="name">Lucas Petit</span><span class="c num">2.9×</span><span class="c good col-contract">Permanent</span><span class="c good col-guar">Visale</span><span class="c col-file num">90%</span><span class="score"><b class="num">81</b><span class="bar"><i style="width:81%"></i></span></span></div>
+          <div class="rank-row extra"><span class="r num">7</span><span class="name">Emma Dubois</span><span class="c num">2.8×</span><span class="c good col-contract">Civil servant</span><span class="c col-guar">None</span><span class="c good col-file num">100%</span><span class="score"><b class="num">79</b><span class="bar"><i style="width:79%"></i></span></span></div>
+          <div class="rank-row extra"><span class="r num">8</span><span class="name">Hugo Lambert</span><span class="c num">2.8×</span><span class="c good col-contract">Permanent</span><span class="c good col-guar">Parent</span><span class="c col-file num">85%</span><span class="score"><b class="num">76</b><span class="bar"><i style="width:76%"></i></span></span></div>
+          <div class="rank-row extra"><span class="r num">9</span><span class="name">Camille Fontaine</span><span class="c num">2.7×</span><span class="c good col-contract">Permanent</span><span class="c good col-guar">Visale</span><span class="c col-file num">90%</span><span class="score"><b class="num">74</b><span class="bar"><i style="width:74%"></i></span></span></div>
+          <div class="rank-row extra"><span class="r num">10</span><span class="name">Nathan Rossi</span><span class="c num">2.6×</span><span class="c col-contract">Fixed-term</span><span class="c good col-guar">Parent</span><span class="c good col-file num">95%</span><span class="score"><b class="num">70</b><span class="bar"><i style="width:70%"></i></span></span></div>
+          <div class="rank-more" id="rankMore">Ranks 4 to 10 invited as well</div>
           <div class="cutoff"><span>Viewing cut-off · top 10</span></div>
           <div class="rank-row out"><span class="r num">11</span><span class="name">Julien Moreau</span><span class="c num">2.4×</span><span class="c col-contract">Fixed-term</span><span class="c col-guar">None</span><span class="c col-file num">70%</span><span class="score"><b class="num">61</b><span class="bar"><i style="width:61%"></i></span></span></div>
           <div class="rank-row out" style="border-bottom:0"><span class="r num">12</span><span class="name">Anaïs Roux</span><span class="c num">2.1×</span><span class="c col-contract">Freelance</span><span class="c col-guar">None</span><span class="c col-file num">60%</span><span class="score"><b class="num">55</b><span class="bar"><i style="width:55%"></i></span></span></div>
@@ -1629,7 +1642,8 @@ var APP_URL = "";
   var CALLS = [
     { dir: "Incoming · 23:47", who: "Léa Martin, prospect",
       lines: [["caller", "Caller", "Is the flat on rue Gambetta still available?"],
-              ["agent", "Obsidia", "Yes, from 1 December. Rent is €1,150 plus €90 charges. Can I take your details?"]],
+              ["agent", "Obsidia", "Yes, from 1 December. Rent is €1,150 plus €90 charges. Can I take your details?"],
+              ["caller", "Caller", "Léa Martin, permanent contract, €3,900 net a month. I could move in on 1 December."]],
       out: ["Name", "Phone", "Income", "Move-in date"] },
     { dir: "Outgoing · 10:05", who: "Claire Durand, tenant apt 7",
       lines: [["agent", "Obsidia", "Hello Ms Durand, Obsidia calling for your landlord. Your November rent of €1,480 hasn't arrived yet. When can you pay it?"],
@@ -1648,17 +1662,21 @@ var APP_URL = "";
     clearInterval(cTick);
     callDir.textContent = c.dir; callWho.textContent = c.who;
     callLines.textContent = ""; callOut.textContent = "";
+    var pills = c.out.map(function (o) {
+      var s = document.createElement("span");
+      s.className = "pill pending";
+      s.innerHTML = '<svg class="i" aria-hidden="true"><use href="#i-check"/></svg>';
+      s.appendChild(document.createTextNode(o));
+      callOut.appendChild(s);
+      return s;
+    });
     callTime.textContent = "00:00"; callTime.classList.add("is-live");
     cTick = setInterval(function () { if (live()) callTime.textContent = mmss(++secs); }, 1000);
     function finish() {
       setOrb(callOrb, "idle"); cWave.set(0); clearInterval(cTick); callTime.classList.remove("is-live");
       if (reduce) callTime.textContent = n === 0 ? "03:12" : "01:04";
-      c.out.forEach(function (o, i) {
-        var s = document.createElement("span");
-        s.className = "pill pop"; s.style.animationDelay = i * 90 + "ms";
-        s.innerHTML = '<svg class="i" aria-hidden="true"><use href="#i-check"/></svg>';
-        s.appendChild(document.createTextNode(o));
-        callOut.appendChild(s);
+      pills.forEach(function (s, i) {
+        s.classList.remove("pending"); s.classList.add("pop"); s.style.animationDelay = i * 90 + "ms";
       });
       if (n === 0 && !touched && !reduce) later(function () { callSeg.select(callEl.querySelector('[data-call="1"]')); playCall(1); }, 2800, live);
     }
@@ -1728,7 +1746,26 @@ var APP_URL = "";
       };
     }));
   }
-  function reserveAll() { reserveCall(); reserveAssist(); }
+  /* Rating card: show ranks 4-10 while they fit beside the phone card, so the row has no empty band */
+  var ratingEl = document.getElementById("rating"), rankMore = document.getElementById("rankMore");
+  var extras = [].slice.call(ratingEl.querySelectorAll(".rank-row.extra"));
+  function fitRanks() {
+    var card = ratingEl.closest(".card"), next = card.nextElementSibling, text = card.querySelector(".card-text");
+    extras.forEach(function (r) { r.classList.remove("fit"); });
+    rankMore.hidden = false;
+    var n = 0;
+    if (next && next.offsetTop === card.offsetTop) {
+      var gap = ratingEl.offsetTop - (text.offsetTop + text.offsetHeight) - 20;
+      var rowH = ratingEl.querySelector(".rank-row").offsetHeight;
+      n = Math.max(0, Math.min(extras.length, Math.floor(gap / rowH)));
+      if (n < extras.length && Math.floor((gap + rankMore.offsetHeight) / rowH) >= extras.length) n = extras.length;
+    }
+    extras.slice(0, n).forEach(function (r) { r.classList.add("fit"); });
+    var from = 4 + n;
+    rankMore.hidden = from > 10;
+    rankMore.textContent = from === 10 ? "Rank 10 invited as well" : "Ranks " + from + " to 10 invited as well";
+  }
+  function reserveAll() { reserveCall(); reserveAssist(); fitRanks(); }
   reserveAll();
   var rsT = 0;
   window.addEventListener("resize", function () { clearTimeout(rsT); rsT = setTimeout(reserveAll, 150); });
