@@ -111,19 +111,7 @@ p { text-wrap: pretty; }
 .btn:hover .arrow { transform: translateX(3px); }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* Pills */
-.pill {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px;
-  font: 500 12px/16px var(--font-body); color: var(--ash); white-space: nowrap;
-}
 .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--steel); flex: none; }
-.pill.ok .dot { background: var(--teal); }
-.pill.ok { color: var(--ivory); }
-.pill.late .dot { background: var(--coral); }
-.pill.late { color: var(--ivory); }
-.pill.brass { color: var(--brass-light); border-color: rgba(198,161,91,.35); }
-.pill.brass .dot { background: var(--brass); }
 
 /* Header */
 .site-head {
@@ -211,7 +199,7 @@ p { text-wrap: pretty; }
 .pane-meta { font: 400 12px/1 var(--font-mono); color: var(--ash); letter-spacing: .04em; }
 
 .feed-row {
-  display: grid; grid-template-columns: 34px minmax(0,1fr) auto; gap: 4px 14px; align-items: start;
+  display: grid; grid-template-columns: 34px minmax(0,1fr); gap: 14px; align-items: start;
   padding: 14px 0; border-top: 1px solid var(--line);
 }
 .pane-head + .feed .feed-row:first-child { border-top: 0; }
@@ -219,7 +207,6 @@ p { text-wrap: pretty; }
 .feed-who { display: flex; gap: 10px; align-items: baseline; font-size: 14px; font-weight: 500; }
 .feed-who time { font: 400 12px/1 var(--font-mono); color: var(--ash); }
 .feed-what { font-size: 14px; line-height: 1.5; color: var(--ash); margin-top: 2px; }
-.feed-row .pill { margin-top: 2px; }
 
 .js .feed-row { opacity: 0; transform: translateY(6px); transition: opacity .4s ease, transform .4s ease; }
 .js .feed-row.in { opacity: 1; transform: none; }
@@ -267,11 +254,6 @@ p { text-wrap: pretty; }
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; object-position: 50% 38%;
   transform: scale(1.12); transition: transform 1.6s var(--ease-out, ease-out);
-}
-.listing-photo .pill { position: relative; z-index: 1; }
-.listing-photo.has-img .pill {
-  color: #F5F3EF; border-color: rgba(245,243,239,.22);
-  background: rgba(8,9,11,.55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
 }
 /* Staging: the photo settles into frame as the card arrives */
 .listing.is-in .listing-photo img, html:not(.js) .listing-photo img { transform: scale(1); }
@@ -361,7 +343,6 @@ p { text-wrap: pretty; }
 .line.agent .who { color: var(--brass); }
 .line.caller { color: var(--ash); }
 .collected { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--line); }
-.collected .pill .i { width: 13px; height: 13px; color: var(--teal); }
 
 /* Messages */
 .msg { max-width: 88%; padding: 10px 13px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
@@ -551,8 +532,6 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
   .days { grid-template-columns: 1fr; }
   .result { grid-template-columns: 1fr; }
   .result .result-note { justify-self: start; }
-  .feed-row { grid-template-columns: 34px minmax(0,1fr); }
-  .feed-row .pill { grid-column: 2; justify-self: start; }
   .pane { padding: 16px; }
   .card-text, .card.main .card-text, .assist .card-text { padding: 22px 18px 20px; }
   .card.main h3 { font-size: 31px; }
@@ -615,8 +594,6 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
 
 /* Feed rows arrive on an arc, then their status pops */
 .js .feed-row.in { animation: arc-in .65s var(--ease-out) backwards; }
-.js .feed-row .pill { opacity: 0; }
-.js .feed-row.in .pill { opacity: 1; animation: pop .5s var(--ease-spring) .3s backwards; }
 .agenda .slot, .agenda-note { animation: rise .55s var(--ease-spring) backwards; }
 .agenda .slot:nth-child(1) { animation-delay: 1.95s; }
 .agenda .slot:nth-child(2) { animation-delay: 2.08s; }
@@ -624,8 +601,6 @@ input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 
 .agenda-note { animation-delay: 2.4s; }
 
 /* Secondary action: the live dot keeps breathing */
-.pill.live .dot { position: relative; }
-.pill.live .dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--teal); animation: ping 2.2s var(--ease-out) infinite; }
 
 /* Scroll reveals (one group at a time) */
 .js [data-reveal]:not(.is-in) { opacity: 0; }
@@ -748,7 +723,7 @@ input[type=range] { height: 32px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-delay: 0s !important; }
-  .pill.live .dot::after, .assist.is-thinking .card-icon .i, .card.is-in .call-top .i { animation: none !important; }
+  .assist.is-thinking .card-icon .i, .card.is-in .call-top .i { animation: none !important; }
   .product { transition: none; }
 }
 
@@ -788,9 +763,6 @@ input[type=range] { height: 32px; }
 [data-theme="light"] .slot-kind .i, [data-theme="light"] .slot time, [data-theme="light"] .line.agent .who,
 [data-theme="light"] .cutoff span, [data-theme="light"] .incl .i, [data-theme="light"] .req .i,
 [data-theme="light"] .msg-meta .chan-name .i, [data-theme="light"] .c-new,
-[data-theme="light"] .pill.brass { color: var(--brass-ink); }
-[data-theme="light"] .pill.ok, [data-theme="light"] .pill.late { color: #0E1014; }
-[data-theme="light"] .pill.ok .dot { background: #2FA08C; }
 [data-theme="light"] .card:hover { border-color: #CFC8BB; }
 /* The Paper section flips to the single dark moment of the light page */
 [data-theme="light"] .paper { background: #08090B; color: #F5F3EF; }
@@ -807,6 +779,31 @@ input[type=range] { height: 32px; }
 
 /* Theme toggle */
 .head-actions { display: flex; align-items: center; gap: 8px; }
+/* Mobile menu: the nav links live behind a two-bar button under 760px */
+.menu-btn, .m-menu { display: none; }
+@media (max-width: 760px) {
+  .head-row { gap: 12px; }
+  .head-actions { gap: 4px; }
+  .menu-btn {
+    display: grid; place-content: center; gap: 6px; width: 44px; height: 44px; margin-right: -6px; border-radius: 8px;
+    transition: transform .45s var(--ease-spring);
+  }
+  .menu-btn:active { transform: scale(.9); }
+  .menu-btn span { display: block; width: 20px; height: 1.5px; border-radius: 1px; background: var(--ivory); transition: transform .4s var(--ease-spring); }
+  .menu-open .menu-btn span:first-child { transform: translateY(3.75px) rotate(45deg); }
+  .menu-open .menu-btn span:last-child { transform: translateY(-3.75px) rotate(-45deg); }
+  .m-menu {
+    display: grid; position: absolute; left: 0; right: 0; top: 100%;
+    padding: 4px var(--gutter) 20px; background: var(--obsidian); border-bottom: 1px solid var(--line);
+    box-shadow: 0 24px 40px -24px rgba(0,0,0,.35);
+    opacity: 0; visibility: hidden; transform: translateY(-8px);
+    transition: opacity .25s ease, transform .35s var(--ease-out), visibility 0s linear .35s;
+  }
+  .menu-open .m-menu { opacity: 1; visibility: visible; transform: none; transition: opacity .25s ease, transform .35s var(--ease-out); }
+  .m-menu a { display: flex; align-items: center; min-height: 56px; border-bottom: 1px solid var(--line); font: 400 28px/1.1 var(--font-display); }
+  .m-menu a:last-child { border-bottom: 0; }
+  .menu-open { border-bottom-color: var(--line); }
+}
 .theme-toggle {
   width: 40px; height: 40px; border-radius: 8px; display: grid; place-items: center;
   color: var(--ash); border: 1px solid transparent;
@@ -968,15 +965,8 @@ input[type=range] { height: 32px; }
 [data-theme="light"] .cline.agent .who { color: #7D6434; }
 .cline.caller { color: var(--ash); }
 .cline.in { animation: rise .4s var(--ease-out) backwards; }
-.outcomes { display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; margin-top: auto; padding-top: 14px; border-top: 1px solid var(--line); min-height: 44px; }
 .call-lines { margin-bottom: 10px; }
-.outcomes .pill .i { width: 13px; height: 13px; color: var(--teal); }
-[data-theme="light"] .outcomes .pill .i { color: #23806F; }
-.outcomes .pill.pop { animation: pop .5s var(--ease-spring) backwards; }
-/* Outcomes are listed from the start, dashed until the agent has collected them */
-.outcomes .pill.pending { border-style: dashed; color: var(--steel); }
-.outcomes .pill.pending .i { color: var(--steel); opacity: .5; }
-
+[data-theme="light"] 
 @media (max-width: 760px) {
   .orb { width: 60px; height: 60px; }
   .orb-sm { width: 40px; height: 40px; }
@@ -1039,8 +1029,14 @@ input[type=range] { height: 32px; }
     <div class="head-actions">
       <button class="theme-toggle" type="button" id="themeToggle" aria-label="Switch to light mode"><svg class="i i-moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="i i-sun" aria-hidden="true"><use href="#i-sun"/></svg></button>
       <a class="btn btn-primary btn-sm" data-app href="#"><span class="spin" aria-hidden="true"></span><span class="btn-label">Get started</span></a>
+      <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mMenu" aria-label="Open menu"><span></span><span></span></button>
     </div>
   </div>
+  <nav class="m-menu" id="mMenu" aria-label="Mobile">
+    <a href="#how">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+  </nav>
 </header>
 
 <main>
@@ -1062,7 +1058,6 @@ input[type=range] { height: 32px; }
     <div class="product-stage"><div class="product" role="img" aria-label="Obsidia dashboard for today: five conversations handled automatically, and three tasks left for the manager: a viewing, a key check-in and a key check-out.">
       <div class="product-bar" aria-hidden="true">
         <div class="where"><span class="logo-mark"></span><strong>Today</strong><span class="num" style="white-space:nowrap">Thu 19 Nov</span></div>
-        <span class="pill ok live"><span class="dot"></span>Answering</span>
       </div>
       <div class="product-body" aria-hidden="true">
         <div class="pane">
@@ -1071,27 +1066,22 @@ input[type=range] { height: 32px; }
             <div class="feed-row">
               <span class="chan"><svg class="i"><use href="#i-phone"/></svg></span>
               <div><div class="feed-who">Call · Léa Martin <time class="num">02:14</time></div><div class="feed-what">Asked about 14 rue Gambetta. Contact details, income and move-in date collected.</div></div>
-              <span class="pill ok"><span class="dot"></span>Lead created</span>
             </div>
             <div class="feed-row">
               <span class="chan"><svg class="i"><use href="#i-chat"/></svg></span>
               <div><div class="feed-who">WhatsApp · Jonas Keller <time class="num">07:41</time></div><div class="feed-what">Asked which documents are needed. Answered in German.</div></div>
-              <span class="pill ok"><span class="dot"></span>Answered in 6 s</span>
             </div>
             <div class="feed-row">
               <span class="chan"><svg class="i"><use href="#i-mail"/></svg></span>
               <div><div class="feed-who">Email · Sophie Laurent <time class="num">08:03</time></div><div class="feed-what">Complete file received for 14 rue Gambetta. Rated and ranked.</div></div>
-              <span class="pill brass"><span class="dot"></span>Score 94 · top 10</span>
             </div>
             <div class="feed-row">
               <span class="chan"><svg class="i"><use href="#i-receipt"/></svg></span>
               <div><div class="feed-who">Rent · Apt 4B, 8 av. Foch <time class="num">09:00</time></div><div class="feed-what">€1,150 six days late. Second reminder sent to the tenant.</div></div>
-              <span class="pill late"><span class="dot"></span>Reminder 2</span>
             </div>
             <div class="feed-row">
               <span class="chan"><svg class="i"><use href="#i-tool"/></svg></span>
               <div><div class="feed-who">Request · Apt 2A <time class="num">09:12</time></div><div class="feed-what">Leaking tap reported. Plumber booked for Friday 09:00.</div></div>
-              <span class="pill ok"><span class="dot"></span>Scheduled</span>
             </div>
           </div>
         </div>
@@ -1126,7 +1116,7 @@ input[type=range] { height: 32px; }
     </div>
 
     <div class="listing" id="listing" aria-label="Example listing with its phone number and email replaced by Obsidia contacts">
-      <div class="listing-photo"><img src="img/apartment.webp" width="1200" height="800" alt="Planted terrace of the flat with a view of the Eiffel Tower" loading="lazy" decoding="async" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()" /><span class="pill">68 m² · 3 rooms · terrace</span></div>
+      <div class="listing-photo"><img src="img/apartment.webp" width="1200" height="800" alt="Planted terrace of the flat with a view of the Eiffel Tower" loading="lazy" decoding="async" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()" /></div>
       <div class="listing-body">
         <div class="listing-title">Top-floor 3-room flat with terrace</div>
         <div class="listing-sub">14 rue Gambetta, Paris 16e · Eiffel Tower view</div>
@@ -1204,12 +1194,6 @@ input[type=range] { height: 32px; }
             <p class="cline caller"><span class="who">Caller</span>Is the flat on rue Gambetta still available?</p>
             <p class="cline agent"><span class="who">Obsidia</span>Yes, from 1 December. Rent is €1,150 plus €90 charges. Can I take your details?</p>
           </div>
-          <div class="outcomes" id="callOut">
-            <span class="pill"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Name</span>
-            <span class="pill"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Phone</span>
-            <span class="pill"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Income</span>
-            <span class="pill"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Move-in date</span>
-          </div>
         </div>
       </article>
 
@@ -1221,7 +1205,7 @@ input[type=range] { height: 32px; }
           <p>Availability, rent, charges, documents needed, viewing slots. Everything in one place, in the applicant's language.</p>
         </div>
         <div class="visual" aria-label="Example WhatsApp exchange in German">
-          <div class="msg-meta"><span class="chan-name"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>Jonas Keller</span><span class="pill">German</span></div>
+          <div class="msg-meta"><span class="chan-name"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>Jonas Keller</span></div>
           <div class="msg msg-in">Hallo, welche Unterlagen brauche ich für die Wohnung?</div>
           <div class="msg msg-out">Hallo Jonas, bitte senden Sie Ausweis, die letzten 3 Gehaltsabrechnungen und Ihren Arbeitsvertrag. Besichtigung: Do 10:30 oder Sa 11:00.</div>
           <div class="msg-foot num">Replied in 6 s</div>
@@ -1438,6 +1422,19 @@ var APP_URL = "";
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
+  /* Mobile menu */
+  var menuBtn = document.getElementById("menuBtn"), mMenu = document.getElementById("mMenu");
+  function setMenu(open) {
+    head.classList.toggle("menu-open", open);
+    menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  }
+  menuBtn.addEventListener("click", function () { setMenu(!head.classList.contains("menu-open")); });
+  mMenu.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && head.classList.contains("menu-open")) { setMenu(false); menuBtn.focus(); } });
+  document.addEventListener("click", function (e) { if (!head.contains(e.target)) setMenu(false); });
+  window.addEventListener("resize", function () { if (window.innerWidth > 760) setMenu(false); });
+
   /* CTA buttons: point to the app (when set) and show a loading state on click */
   var ctas = document.querySelectorAll("[data-app]");
   ctas.forEach(function (a) {
@@ -1643,16 +1640,14 @@ var APP_URL = "";
     { dir: "Incoming · 23:47", who: "Léa Martin, prospect",
       lines: [["caller", "Caller", "Is the flat on rue Gambetta still available?"],
               ["agent", "Obsidia", "Yes, from 1 December. Rent is €1,150 plus €90 charges. Can I take your details?"],
-              ["caller", "Caller", "Léa Martin, permanent contract, €3,900 net a month. I could move in on 1 December."]],
-      out: ["Name", "Phone", "Income", "Move-in date"] },
+              ["caller", "Caller", "Léa Martin, permanent contract, €3,900 net a month. I could move in on 1 December."]] },
     { dir: "Outgoing · 10:05", who: "Claire Durand, tenant apt 7",
       lines: [["agent", "Obsidia", "Hello Ms Durand, Obsidia calling for your landlord. Your November rent of €1,480 hasn't arrived yet. When can you pay it?"],
               ["caller", "Tenant", "Sorry, I forgot. I'll send it tomorrow."],
-              ["agent", "Obsidia", "Noted for Friday 20 November. I'll text you a confirmation."]],
-      out: ["Payment promised · Fri 20 Nov", "Logged in CRM"] }
+              ["agent", "Obsidia", "Noted for Friday 20 November. I'll text you a confirmation."]] }
   ];
   var callEl = document.getElementById("call"), callOrb = callEl.querySelector(".orb");
-  var callLines = document.getElementById("callLines"), callOut = document.getElementById("callOut");
+  var callLines = document.getElementById("callLines");
   var callDir = document.getElementById("callDir"), callWho = document.getElementById("callWho"), callTime = document.getElementById("callTime");
   var cWave = makeWave(document.getElementById("callWave"), 40, callOrb);
   var cRun = 0, cTick = 0, touched = false, callSeg;
@@ -1661,23 +1656,12 @@ var APP_URL = "";
     var id = ++cRun, live = function () { return id === cRun; }, c = CALLS[n], secs = 0, k = 0;
     clearInterval(cTick);
     callDir.textContent = c.dir; callWho.textContent = c.who;
-    callLines.textContent = ""; callOut.textContent = "";
-    var pills = c.out.map(function (o) {
-      var s = document.createElement("span");
-      s.className = "pill pending";
-      s.innerHTML = '<svg class="i" aria-hidden="true"><use href="#i-check"/></svg>';
-      s.appendChild(document.createTextNode(o));
-      callOut.appendChild(s);
-      return s;
-    });
+    callLines.textContent = "";
     callTime.textContent = "00:00"; callTime.classList.add("is-live");
     cTick = setInterval(function () { if (live()) callTime.textContent = mmss(++secs); }, 1000);
     function finish() {
       setOrb(callOrb, "idle"); cWave.set(0); clearInterval(cTick); callTime.classList.remove("is-live");
       if (reduce) callTime.textContent = n === 0 ? "03:12" : "01:04";
-      pills.forEach(function (s, i) {
-        s.classList.remove("pending"); s.classList.add("pop"); s.style.animationDelay = i * 90 + "ms";
-      });
       if (n === 0 && !touched && !reduce) later(function () { callSeg.select(callEl.querySelector('[data-call="1"]')); playCall(1); }, 2800, live);
     }
     (function nextLine() {
@@ -1718,14 +1702,9 @@ var APP_URL = "";
       return function (c) {
         c.querySelector("#callDir").textContent = d.dir;
         c.querySelector("#callWho").textContent = d.who;
-        var L = c.querySelector("#callLines"), O = c.querySelector("#callOut");
-        L.textContent = ""; O.textContent = "";
+        var L = c.querySelector("#callLines");
+        L.textContent = "";
         d.lines.forEach(function (l) { L.appendChild(line("cline " + l[0], l[1], l[2])); });
-        d.out.forEach(function (o) {
-          var s = document.createElement("span");
-          s.className = "pill"; s.innerHTML = '<svg class="i"><use href="#i-check"/></svg>';
-          s.appendChild(document.createTextNode(o)); O.appendChild(s);
-        });
       };
     }));
   }
