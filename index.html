@@ -1,653 +1,1748 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Obsidia — Automation for long-term rental management</title>
-<meta name="description" content="Obsidia answers applicants, screens files, books viewings, handles incidents and issues rent receipts. Plug it into your property software and let the platform take the first level." />
-<meta property="og:title" content="Obsidia — The agency that never re-keys anything" />
-<meta property="og:description" content="Automation for long-term rental management. Six modules covering the rental cycle end to end." />
-<meta property="og:type" content="website" />
+<title>Obsidia — Your rentals run themselves</title>
+<meta name="description" content="Obsidia answers every call, email and WhatsApp, rates every applicant, fills your CRM and handles tenants after the lease is signed. €10 per unit per month." />
+<meta name="theme-color" content="#F5F3EF" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='28,0 100,0 100,72 72,100 0,100 0,28' fill='%23C6A15B'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<!-- Body/UI: Switzer (free, Fontshare). Licensed alternatives to self-host: ABC Diatype, TWK Lausanne, Saans -->
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap" rel="stylesheet" />
 <style>
-  html { scroll-behavior: smooth; }
-  body { margin: 0; background: #08090B; color: #F5F3EF; font-family: "Schibsted Grotesk", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-  a { color: #C6A15B; text-decoration: none; }
-  a:hover { color: #E2C692; }
-  ::selection { background: #6E5A31; color: #F5F3EF; }
-  @keyframes obsPulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
-  * { box-sizing: border-box; }
-  /* hover states (ported from the design's style-hover attributes) */
-  .obs-cta:hover { background: #E2C692 !important; }
-  .obs-outline:hover { border-color: #C6A15B !important; color: #E2C692 !important; }
-  .obs-card:hover { border-color: #6A7280 !important; }
-  .obs-faq-btn:hover { color: #E2C692 !important; }
-  input[type="range"] { accent-color: #C6A15B; }
+:root {
+  --obsidian: #08090B;
+  --graphite: #14171D;
+  --line: #272C35;
+  --ivory: #F5F3EF;
+  --ash: #868C97;
+  --steel: #6A7280;
+  --brass: #C6A15B;
+  --brass-light: #E2C692;
+  --brass-dark: #6E5A31;
+  --lime: #D4FF3A;
+  --teal: #6FD8C4;
+  --coral: #F0766A;
+  --paper: #F5F3EF;
+  --paper-ink-2: #4B515C;   /* secondary text on Paper: Ash fails contrast there */
+  --paper-line: #DCD7CD;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-body: "Switzer", system-ui, sans-serif;
+  --font-logo: "Schibsted Grotesk", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --gutter: 24px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  background: var(--obsidian);
+  color: var(--ivory);
+  font: 400 16px/1.65 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+img, svg { display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+ul { list-style: none; }
+:focus-visible { outline: 2px solid var(--brass-light); outline-offset: 3px; border-radius: 4px; }
+
+.wrap { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 var(--gutter); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Icons: one stroke set, one weight */
+.i { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* Logo lockup */
+.logo { display: inline-flex; align-items: center; gap: 7px; }
+.logo-mark { width: 13px; height: 13px; background: var(--brass); clip-path: polygon(28% 0,100% 0,100% 72%,72% 100%,0 100%,0 28%); }
+.logo-word { font: 600 15px/1 var(--font-logo); text-transform: uppercase; letter-spacing: 0.24em; margin-right: -0.24em; }
+
+/* Type */
+.eyebrow { font: 500 12px/1 var(--font-mono); text-transform: uppercase; letter-spacing: 0.14em; color: var(--brass); }
+.h1 {
+  font: 400 clamp(46px, 7.4vw, 76px)/1.02 var(--font-display);
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+.h2 {
+  font: 400 clamp(36px, 5vw, 50px)/1.06 var(--font-display);
+  letter-spacing: -0.008em;
+  text-wrap: balance;
+}
+.hl { font-style: italic; color: var(--lime); }
+.lead { font-size: 18px; line-height: 1.6; color: var(--ash); text-wrap: pretty; }
+p { text-wrap: pretty; }
+
+/* Buttons */
+.btn {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 14px 24px;
+  border-radius: 9px;
+  font: 600 15px/20px var(--font-body);
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease, transform .18s ease;
+  white-space: nowrap;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--brass); color: var(--obsidian); }
+.btn-primary:hover { background: var(--brass-light); }
+.btn-secondary { border: 1px solid var(--steel); color: var(--ivory); padding: 13px 23px; }
+.btn-secondary:hover { border-color: var(--brass); }
+.btn-sm { padding: 9px 16px; font-size: 14px; border-radius: 8px; }
+.btn-lg { padding: 17px 30px; font-size: 16px; }
+.btn .spin {
+  display: none; width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid currentColor; border-right-color: transparent;
+  animation: spin .7s linear infinite;
+}
+.btn.is-loading { pointer-events: none; }
+.btn.is-loading .spin { display: block; }
+.btn.is-loading .arrow { display: none; }
+.arrow { transition: transform .18s ease; }
+.btn:hover .arrow { transform: translateX(3px); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Pills */
+.pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px;
+  font: 500 12px/16px var(--font-body); color: var(--ash); white-space: nowrap;
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--steel); flex: none; }
+.pill.ok .dot { background: var(--teal); }
+.pill.ok { color: var(--ivory); }
+.pill.late .dot { background: var(--coral); }
+.pill.late { color: var(--ivory); }
+.pill.brass { color: var(--brass-light); border-color: rgba(198,161,91,.35); }
+.pill.brass .dot { background: var(--brass); }
+
+/* Header */
+.site-head {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(8,9,11,.82);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s ease;
+}
+.site-head.scrolled { border-bottom-color: var(--line); }
+.head-row { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 24px; }
+.nav { display: flex; gap: 32px; font-size: 15px; color: var(--ash); }
+.nav a:hover { color: var(--ivory); }
+
+/* Hero */
+.hero { position: relative; padding: 96px 0 0; isolation: isolate; overflow-x: clip; }
+.hero::before {
+  content: ""; position: absolute; z-index: -3;
+  left: 50%; top: -160px; width: 1100px; height: 760px; transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(198,161,91,.17), rgba(198,161,91,0));
+  pointer-events: none;
+}
+
+/* Fluted glass: brass light shapes behind a ribbed, blurred pane */
+.hero-light { position: absolute; inset: 0; z-index: -2; pointer-events: none; }
+.hero-light span { position: absolute; border-radius: 50%; will-change: transform; }
+.hero-light .l1 {
+  width: 520px; height: 520px; right: 2%; top: -30px;
+  background: radial-gradient(closest-side, rgba(226,198,146,.62), rgba(198,161,91,.24) 55%, rgba(198,161,91,0));
+  animation: drift-a 24s ease-in-out infinite alternate;
+}
+.hero-light .l2 {
+  width: 220px; height: 640px; right: 30%; top: -60px;
+  background: radial-gradient(closest-side, rgba(198,161,91,.42), rgba(198,161,91,0));
+  transform: rotate(22deg);
+  animation: drift-b 30s ease-in-out infinite alternate;
+}
+.hero-light .l3 {
+  width: 460px; height: 460px; left: -8%; top: 300px;
+  background: radial-gradient(closest-side, rgba(110,90,49,.55), rgba(110,90,49,0));
+  animation: drift-c 28s ease-in-out infinite alternate;
+}
+@keyframes drift-a { from { transform: translate(0,0); } to { transform: translate(-140px, 70px); } }
+@keyframes drift-b { from { transform: translate(0,0) rotate(22deg); } to { transform: translate(160px, 30px) rotate(14deg); } }
+@keyframes drift-c { from { transform: translate(0,0); } to { transform: translate(120px, -60px); } }
+
+.flutes {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  --rib: 34px;
+  -webkit-backdrop-filter: blur(26px) saturate(115%);
+  backdrop-filter: blur(26px) saturate(115%);
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(245,243,239,.075) 0,
+      rgba(245,243,239,.02) calc(var(--rib) * .18),
+      rgba(8,9,11,0) calc(var(--rib) * .45),
+      rgba(8,9,11,.28) calc(var(--rib) * .92),
+      rgba(245,243,239,.09) var(--rib));
+  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 52%, transparent 88%);
+  mask-image: linear-gradient(to bottom, #000 0, #000 52%, transparent 88%);
+}
+.hero-copy { position: relative; }
+.hero .lead { color: #A3A8B1; } /* lifted from Ash: keeps contrast over the lit glass */
+.hero-copy { max-width: 820px; }
+.hero .lead { margin-top: 28px; max-width: 640px; }
+.hero .human { color: var(--ivory); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+
+/* Product frame (hero) */
+.product {
+  margin-top: 72px;
+  background: var(--graphite);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 8px;                        /* inner radius = 20 - 8 = 12 */
+  box-shadow: 0 40px 120px -40px rgba(0,0,0,.8);
+}
+.product-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px 16px; }
+.product-bar .where { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--ash); }
+.product-bar .where strong { color: var(--ivory); font-weight: 500; }
+.product-body { display: grid; grid-template-columns: 1.6fr 1fr; gap: 8px; }
+.pane { background: var(--obsidian); border: 1px solid var(--line); border-radius: 12px; padding: 20px; min-width: 0; }
+.pane-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.pane-title { font-weight: 600; font-size: 15px; }
+.pane-meta { font: 400 12px/1 var(--font-mono); color: var(--ash); letter-spacing: .04em; }
+
+.feed-row {
+  display: grid; grid-template-columns: 34px minmax(0,1fr) auto; gap: 4px 14px; align-items: start;
+  padding: 14px 0; border-top: 1px solid var(--line);
+}
+.pane-head + .feed .feed-row:first-child { border-top: 0; }
+.chan { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line); display: grid; place-items: center; color: var(--brass); background: var(--graphite); }
+.feed-who { display: flex; gap: 10px; align-items: baseline; font-size: 14px; font-weight: 500; }
+.feed-who time { font: 400 12px/1 var(--font-mono); color: var(--ash); }
+.feed-what { font-size: 14px; line-height: 1.5; color: var(--ash); margin-top: 2px; }
+.feed-row .pill { margin-top: 2px; }
+
+.js .feed-row { opacity: 0; transform: translateY(6px); transition: opacity .4s ease, transform .4s ease; }
+.js .feed-row.in { opacity: 1; transform: none; }
+
+.agenda { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.slot { display: grid; grid-template-columns: 52px minmax(0,1fr); gap: 14px; padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--graphite); }
+.slot time { font: 500 14px/20px var(--font-mono); color: var(--brass-light); }
+.slot-kind { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 15px; line-height: 20px; }
+.slot-kind .i { color: var(--brass); width: 16px; height: 16px; }
+.slot-where { font-size: 13px; color: var(--ash); margin-top: 2px; line-height: 1.5; }
+.agenda-note { font-size: 13px; color: var(--ash); margin-top: 16px; line-height: 1.5; }
+
+/* Sections */
+.section { padding: 136px 0; }
+.sec-head { max-width: 700px; }
+.sec-head .h2 { margin-top: 18px; }
+.sec-head .lead { margin-top: 20px; }
+
+/* Onboarding */
+.onb { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+.steps { margin-top: 44px; display: grid; gap: 22px; }
+.step { display: grid; grid-template-columns: 36px 1fr; gap: 14px; }
+.step-n { font: 500 13px/24px var(--font-mono); color: var(--brass); }
+.step b { display: block; font-weight: 600; font-size: 16px; line-height: 24px; }
+.step span { color: var(--ash); font-size: 15px; }
+
+.listing { background: var(--graphite); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 8px; }
+.listing-photo {
+  height: 150px; border-radius: 12px; border: 1px solid var(--line); background: var(--obsidian);
+  display: grid; place-items: end start; padding: 16px;
+  /* plain floorplan sketch, no imagery */
+  background-image:
+    linear-gradient(var(--line), var(--line)), linear-gradient(var(--line), var(--line)),
+    linear-gradient(var(--line), var(--line)), linear-gradient(var(--line), var(--line));
+  background-size: 1px 70%, 40% 1px, 1px 45%, 30% 1px;
+  background-position: 42% 0, 0 58%, 72% 100%, 100% 38%;
+  background-repeat: no-repeat;
+}
+.listing-body { padding: 18px 16px 10px; }
+/* Listing photo: fills the slot when img/apartment.webp loads, sketch otherwise */
+.listing-photo { position: relative; overflow: hidden; }
+.listing-photo.has-img { height: 230px; background-image: none; border-color: transparent; }
+.listing-photo img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 38%;
+  transform: scale(1.12); transition: transform 1.6s var(--ease-out, ease-out);
+}
+.listing-photo .pill { position: relative; z-index: 1; }
+.listing-photo.has-img .pill {
+  color: #F5F3EF; border-color: rgba(245,243,239,.22);
+  background: rgba(8,9,11,.55); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+/* Staging: the photo settles into frame as the card arrives */
+.listing.is-in .listing-photo img, html:not(.js) .listing-photo img { transform: scale(1); }
+@media (prefers-reduced-motion: reduce) { .listing-photo img { transform: none; } }
+.listing-title { font-weight: 600; font-size: 17px; }
+.listing-sub { color: var(--ash); font-size: 14px; margin-top: 2px; }
+.listing-price { font: 400 30px/1.1 var(--font-display); margin-top: 14px; }
+.listing-price small { font: 400 14px/1 var(--font-body); color: var(--ash); }
+.contact { margin: 18px 8px 8px; border-top: 1px solid var(--line); padding-top: 14px; }
+.contact-label { font: 500 11px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ash); margin: 0 8px 10px; }
+.c-line { display: grid; grid-template-columns: 18px minmax(0,1fr); gap: 12px; align-items: center; padding: 10px 8px; font-size: 15px; }
+.c-line .i { color: var(--ash); }
+.c-vals { position: relative; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; min-width: 0; }
+.c-old { color: var(--ivory); transition: color .5s ease; position: relative; overflow-wrap: anywhere; }
+.c-old::after { content: ""; position: absolute; left: 0; right: 0; top: 52%; height: 1px; background: var(--coral); transform: scaleX(0); transform-origin: left; transition: transform .5s ease; }
+.c-new { color: var(--brass-light); font-weight: 500; opacity: 0; transform: translateX(-6px); transition: opacity .45s ease .45s, transform .45s ease .45s; overflow-wrap: anywhere; }
+.swapped .c-old { color: var(--steel); }
+.swapped .c-old::after { transform: scaleX(1); }
+.swapped .c-new { opacity: 1; transform: none; }
+.c-status { display: flex; align-items: center; gap: 8px; margin: 8px; padding: 12px 14px; border-radius: 10px; background: var(--obsidian); border: 1px solid var(--line); font-size: 14px; color: var(--ash); opacity: 0; transition: opacity .4s ease 1s; }
+.c-status .dot { background: var(--teal); }
+.swapped .c-status { opacity: 1; }
+
+/* Features */
+.features { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; margin-top: 64px; }
+.card {
+  display: flex; flex-direction: column;
+  background: var(--graphite); border: 1px solid var(--line); border-radius: 16px;
+  padding: 6px;                          /* inner visual radius = 16 - 6 = 10 */
+  min-width: 0;
+}
+.card-text { padding: 24px 22px 22px; }
+.card-icon { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line); display: grid; place-items: center; color: var(--brass); margin-bottom: 20px; }
+.card h3 { font: 400 27px/1.12 var(--font-display); text-wrap: balance; }
+.card p { color: var(--ash); font-size: 15.5px; line-height: 1.6; margin-top: 10px; max-width: 520px; }
+.visual { margin-top: auto; background: var(--obsidian); border: 1px solid var(--line); border-radius: 10px; padding: 18px; min-width: 0; container-type: inline-size; }
+.span-2 { grid-column: span 2; }
+.span-3 { grid-column: span 3; }
+.card.main .card-text { padding: 30px 28px 26px; }
+.card.main h3 { font-size: 36px; }
+.card.main p { font-size: 16.5px; }
+
+.v-label { font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ash); }
+
+/* Rating table */
+.rank-head, .rank-row { display: grid; grid-template-columns: 26px minmax(0,1.5fr) 70px 104px 92px 56px minmax(96px,1fr); gap: 12px; align-items: center; }
+.rank-head { padding: 0 4px 10px; border-bottom: 1px solid var(--line); }
+.rank-head span { font: 500 11px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ash); }
+.rank-row { padding: 11px 4px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.rank-row .r { font: 500 13px/1 var(--font-mono); color: var(--ash); }
+.rank-row .name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank-row .c { color: var(--ash); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank-row .c.good { color: var(--ivory); }
+.score { display: flex; align-items: center; gap: 10px; }
+.score b { font: 500 14px/1 var(--font-mono); width: 22px; }
+.bar { flex: 1; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--brass); border-radius: 2px; transform-origin: left; }
+.js .bar i { transform: scaleX(0); transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+.js .rated .bar i { transform: scaleX(1); }
+.rank-more { padding: 11px 4px 11px 42px; font-size: 13px; color: var(--ash); border-bottom: 1px solid var(--line); }
+.cutoff { display: flex; align-items: center; gap: 12px; padding: 14px 4px; }
+.cutoff::before, .cutoff::after { content: ""; flex: 1; border-top: 1px dashed var(--brass-dark); }
+.cutoff span { font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--brass); }
+.rank-row.out { opacity: .5; }
+.rank-row.out .bar i { background: var(--steel); }
+.rank-foot { display: flex; flex-wrap: wrap; gap: 8px 16px; justify-content: space-between; padding-top: 14px; font-size: 13px; color: var(--ash); }
+@container (max-width: 600px) {
+  .rank-head, .rank-row { grid-template-columns: 22px minmax(0,1fr) 62px minmax(84px,.9fr); }
+  .col-contract, .col-guar, .col-file { display: none; }
+  .rank-more { padding-left: 38px; }
+}
+@container (max-width: 380px) {
+  .rank-head, .rank-row { grid-template-columns: 18px minmax(0,1fr) 40px 74px; gap: 8px; }
+  .rank-row { font-size: 13.5px; }
+  .score { gap: 8px; }
+  .rank-more { padding-left: 30px; }
+}
+
+/* Call transcript */
+.call-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+.call-top .when { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; }
+.call-top .when .i { color: var(--teal); width: 16px; height: 16px; }
+.line { font-size: 14px; line-height: 1.55; padding: 8px 0; }
+.line .who { display: block; font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ash); margin-bottom: 5px; }
+.line.agent .who { color: var(--brass); }
+.line.caller { color: var(--ash); }
+.collected { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--line); }
+.collected .pill .i { width: 13px; height: 13px; color: var(--teal); }
+
+/* Messages */
+.msg { max-width: 88%; padding: 10px 13px; border-radius: 12px; font-size: 14px; line-height: 1.5; }
+.msg-in { background: var(--graphite); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.msg-out { margin-left: auto; margin-top: 8px; background: rgba(198,161,91,.12); border: 1px solid rgba(198,161,91,.28); border-bottom-right-radius: 4px; }
+.msg-meta { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 12px; align-items: center; }
+.msg-meta .chan-name { display: flex; gap: 8px; align-items: center; font-size: 14px; font-weight: 500; }
+.msg-meta .chan-name .i { color: var(--brass); width: 16px; height: 16px; }
+.msg-foot { margin-top: 10px; text-align: right; font: 400 12px/1 var(--font-mono); color: var(--ash); }
+
+/* CRM log */
+.log li { display: grid; grid-template-columns: 44px minmax(0,1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14px; line-height: 1.45; }
+.log li:last-child { border-bottom: 0; padding-bottom: 0; }
+.log time { font: 400 12px/20px var(--font-mono); color: var(--ash); }
+.log span small { display: block; color: var(--ash); font-size: 13px; }
+
+/* After-letting timeline */
+.tl { position: relative; padding-left: 20px; }
+.tl::before { content: ""; position: absolute; left: 4px; top: 8px; bottom: 8px; width: 1px; background: var(--line); }
+.tl li { position: relative; display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 14px; }
+.tl li::before { content: ""; position: absolute; left: -20px; top: 13px; width: 9px; height: 9px; border-radius: 50%; background: var(--obsidian); border: 1px solid var(--steel); }
+.tl li.late::before { border-color: var(--coral); background: var(--coral); }
+.tl li.paid::before { border-color: var(--teal); background: var(--teal); }
+.tl time { font: 400 12px/22px var(--font-mono); color: var(--ash); white-space: nowrap; }
+.req { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 18px minmax(0,1fr); gap: 12px; font-size: 14px; line-height: 1.5; }
+.req .i { color: var(--brass); margin-top: 1px; }
+.req small { display: block; color: var(--ash); font-size: 13px; }
+
+/* Assistant */
+.assist { display: grid; grid-template-columns: minmax(0,.9fr) minmax(0,1.3fr); gap: 6px; }
+.assist .card-text { padding: 30px 28px; }
+.assist .visual { margin-top: 0; display: flex; flex-direction: column; }
+.chat { flex: 1; min-height: 196px; display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; }
+.chat .msg-q { margin-left: auto; max-width: 86%; padding: 10px 13px; border-radius: 12px; border-bottom-right-radius: 4px; background: var(--graphite); border: 1px solid var(--line); font-size: 14px; }
+.chat .msg-a { max-width: 92%; padding: 12px 14px; border-radius: 12px; border-bottom-left-radius: 4px; background: rgba(198,161,91,.10); border: 1px solid rgba(198,161,91,.26); font-size: 14px; line-height: 1.55; }
+.typing { display: inline-flex; gap: 4px; padding: 14px; border-radius: 12px; border-bottom-left-radius: 4px; background: rgba(198,161,91,.10); border: 1px solid rgba(198,161,91,.26); align-self: flex-start; }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--brass-light); animation: blink 1s infinite ease-in-out; }
+.typing i:nth-child(2) { animation-delay: .15s; }
+.typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+.fade-in { animation: fadeUp .35s ease both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.asks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+.ask { padding: 7px 13px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; color: var(--ash); transition: border-color .18s ease, color .18s ease; text-align: left; }
+.ask:hover { border-color: var(--brass); color: var(--ivory); }
+.ask[aria-pressed="true"] { border-color: var(--brass); color: var(--ivory); }
+.ask:disabled { cursor: progress; }
+
+/* Paper section: the one light section */
+.paper { background: var(--paper); color: var(--obsidian); }
+.paper .eyebrow { color: var(--brass-dark); }
+.paper .lead { color: var(--paper-ink-2); }
+.days { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 56px; }
+.day { border-radius: 16px; padding: 30px; }
+.day-before { border: 1px solid var(--paper-line); }
+.day-after { background: var(--obsidian); color: var(--ivory); }
+.day .v-label { color: var(--paper-ink-2); }
+.day-after .v-label { color: var(--brass); }
+.day ul { margin-top: 22px; display: grid; gap: 4px; }
+.day li { display: flex; align-items: center; gap: 12px; font-size: 18px; padding: 8px 0; }
+.day-before li { color: var(--paper-ink-2); text-decoration: line-through; text-decoration-color: rgba(75,81,92,.45); }
+.day-before li .i { color: var(--steel); }
+.day-after li .i { color: var(--brass); }
+.day-after .nothing { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--ash); font-size: 15px; }
+.result { margin-top: 16px; border: 1px solid var(--paper-line); border-radius: 16px; padding: 34px 30px; display: grid; grid-template-columns: auto 1fr; gap: 24px 48px; align-items: end; }
+.result .v-label { color: var(--paper-ink-2); grid-column: 1 / -1; }
+.figures { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 28px; font: 400 clamp(56px, 9vw, 112px)/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.figures .from { color: var(--paper-ink-2); }
+.figures .to { display: inline-flex; align-items: center; gap: 28px; white-space: nowrap; }
+.figures .to-arrow { font-family: var(--font-body); font-size: .4em; color: var(--paper-ink-2); }
+@media (max-width: 760px) { .figures .to { gap: 14px; } }
+.figures mark { background: var(--lime); color: var(--obsidian); padding: 0 .12em; border-radius: 6px; }
+.result .result-note { color: var(--paper-ink-2); max-width: 300px; font-size: 15px; justify-self: end; }
+
+/* Pricing */
+.price-card { margin-top: 56px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--graphite); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 6px; }
+.price-main { padding: 34px 32px; }
+.price-big { display: flex; align-items: baseline; gap: 12px; }
+.price-big b { font: 400 88px/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.price-big span { color: var(--ash); font-size: 16px; line-height: 1.4; }
+.incl { margin-top: 28px; display: grid; gap: 12px; }
+.incl li { display: flex; gap: 12px; align-items: center; font-size: 16px; }
+.incl .i { color: var(--brass); }
+.price-main .btn { margin-top: 34px; }
+.calc { background: var(--obsidian); border: 1px solid var(--line); border-radius: 14px; padding: 30px; display: flex; flex-direction: column; }
+.calc-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-top: 20px; }
+.calc-units { font: 500 15px/1 var(--font-body); }
+.calc-units b { font-weight: 600; font-size: 22px; }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; margin-top: 18px; cursor: pointer; }
+input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(var(--brass), var(--brass)) 0 / var(--p, 30%) 100% no-repeat, var(--line); }
+input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--line); }
+input[type=range]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--brass); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -8px; border-radius: 50%; background: var(--ivory); border: 4px solid var(--brass); }
+input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--ivory); border: 4px solid var(--brass); }
+.scale { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; color: var(--ash); }
+.team { margin-top: 26px; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--graphite); }
+.team-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+.team-save { font-size: 13px; font-weight: 500; color: var(--teal); transition: opacity .2s ease; }
+[data-theme="light"] .team-save { color: #23806F; }
+.team-row { display: grid; grid-template-columns: 96px minmax(0,1fr) 34px; gap: 12px; align-items: center; padding: 6px 0; font-size: 14px; }
+.team-name { color: var(--ash); }
+.team-row.is-obs .team-name { color: var(--ivory); font-weight: 500; }
+.team-bar { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.team-bar i { display: block; height: 100%; width: 100%; border-radius: 4px; background: var(--steel); transform-origin: left; transition: transform .5s var(--ease-spring, ease-out); }
+.team-row.is-obs .team-bar i { background: var(--brass); }
+.team-row b { font: 600 18px/1 var(--font-body); font-variant-numeric: tabular-nums; text-align: right; }
+.team-note { margin-top: 10px; font-size: 12.5px; color: var(--ash); }
+.totals { margin-top: auto; padding-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.total { border-top: 1px solid var(--line); padding-top: 16px; }
+.total b { display: block; font: 400 40px/1.1 var(--font-display); font-variant-numeric: tabular-nums; margin-top: 10px; }
+.calc-note { margin-top: 18px; font-size: 13px; color: var(--ash); }
+
+/* Final CTA */
+.final { text-align: center; padding: 150px 0 140px; border-top: 1px solid var(--line); }
+.final .h2 { font-size: clamp(40px, 6vw, 64px); max-width: 820px; margin: 0 auto; }
+.final .lead { margin: 22px auto 0; max-width: 520px; }
+.final .cta-row { justify-content: center; }
+
+.site-foot {
+  position: relative; isolation: isolate; overflow: hidden;
+  border-top: 1px solid var(--line);
+  padding: 40px 0 clamp(170px, 22vw, 300px);
+}
+/* Footer fluted glass: brass light and the wordmark refracted through the ribs */
+.foot-light { position: absolute; inset: 0; z-index: -2; pointer-events: none; }
+.foot-light span { position: absolute; border-radius: 50%; will-change: transform; }
+.foot-light .f1 {
+  width: 720px; height: 440px; left: calc(50% - 360px); bottom: -230px;
+  background: radial-gradient(closest-side, rgba(226,198,146,.6), rgba(198,161,91,.22) 55%, rgba(198,161,91,0));
+  animation: drift-a 26s ease-in-out infinite alternate;
+}
+.foot-light .f2 {
+  width: 240px; height: 520px; left: 8%; bottom: -260px;
+  background: radial-gradient(closest-side, rgba(198,161,91,.42), rgba(198,161,91,0));
+  transform: rotate(22deg); animation: drift-b 30s ease-in-out infinite alternate;
+}
+.foot-light .f3 {
+  width: 380px; height: 380px; right: 4%; bottom: -170px;
+  background: radial-gradient(closest-side, rgba(198,161,91,.34), rgba(198,161,91,0));
+  animation: drift-c 28s ease-in-out infinite alternate;
+}
+.foot-light .f-word {
+  left: 50%; bottom: -.16em; transform: translateX(-50%); border-radius: 0;
+  font: 600 clamp(64px, 13.5vw, 196px)/1 var(--font-logo);
+  text-transform: uppercase; letter-spacing: .24em; padding-left: .24em; white-space: nowrap;
+  color: rgba(198,161,91,.5);
+}
+.flutes.flutes-foot {
+  -webkit-backdrop-filter: blur(7px) saturate(115%);
+  backdrop-filter: blur(7px) saturate(115%);
+  -webkit-mask-image: linear-gradient(to top, #000 0, #000 55%, transparent 88%);
+  mask-image: linear-gradient(to top, #000 0, #000 55%, transparent 88%);
+}
+[data-theme="light"] .foot-light .f-word { color: rgba(125,100,52,.42); }
+@media (prefers-reduced-motion: reduce) { .foot-light span { animation: none !important; } }
+.foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; font-size: 14px; color: var(--ash); }
+.foot-row nav { display: flex; gap: 24px; }
+.foot-row nav a:hover { color: var(--ivory); }
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .features { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .span-3 { grid-column: span 2; }
+  .onb { grid-template-columns: 1fr; gap: 56px; }
+  .product-body { grid-template-columns: 1fr; }
+  .price-card { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  :root { --gutter: 16px; }
+  .nav { display: none; }
+  .hero { padding-top: 64px; }
+  .product { margin-top: 56px; }
+  .section { padding: 96px 0; }
+  .features { grid-template-columns: 1fr; margin-top: 48px; }
+  .span-2, .span-3 { grid-column: auto; }
+  .assist { grid-template-columns: 1fr; }
+  .days { grid-template-columns: 1fr; }
+  .result { grid-template-columns: 1fr; }
+  .result .result-note { justify-self: start; }
+  .feed-row { grid-template-columns: 34px minmax(0,1fr); }
+  .feed-row .pill { grid-column: 2; justify-self: start; }
+  .pane { padding: 16px; }
+  .card-text, .card.main .card-text, .assist .card-text { padding: 22px 18px 20px; }
+  .card.main h3 { font-size: 31px; }
+  .price-main { padding: 26px 20px; }
+  .calc { padding: 22px 18px; }
+  .price-big b { font-size: 72px; }
+  .day { padding: 24px 20px; }
+  .result { padding: 26px 20px; }
+  .final { padding: 110px 0 100px; }
+  .cta-row .btn { flex: 1 1 auto; }
+}
+@media (max-width: 400px) {
+  .totals { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+  html { scroll-behavior: auto; }
+  .hero-light span { animation: none !important; }
+}
+@media (max-width: 760px) {
+  .flutes { --rib: 22px; }
+  .hero-light .l1 { width: 340px; height: 340px; right: -30%; top: -20px; opacity: .8; }
+  .hero-light .l2 { right: 10%; height: 480px; opacity: .7; }
+  .hero-light .l3 { width: 320px; height: 320px; top: 420px; }
+}
+
+/* =====================================================================
+   Motion layer
+   Easing: slow in / slow out for travel, spring for arrival (follow through),
+   fast for feedback (snappy timing, Doherty < 400 ms).
+   ===================================================================== */
+:root {
+  --ease-out: cubic-bezier(.22,1,.36,1);
+  --ease-in-out: cubic-bezier(.65,0,.35,1);
+  --ease-spring: cubic-bezier(.34,1.56,.64,1);
+  --t-press: 90ms;
+}
+
+/* Hero staging: headline, then promise, then actions, then product */
+.hero-copy > * { animation: stage-in .8s var(--ease-spring) backwards; }
+.hero .h1 { animation-delay: .05s; }
+.hero .lead { animation-delay: .18s; }
+.hero .cta-row { animation-delay: .3s; }
+.hero .hl { display: inline-block; animation: hl-in .9s var(--ease-out) .55s backwards; }
+@keyframes stage-in { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+/* Pose to pose with follow through: lands past the line, settles back */
+@keyframes hl-in {
+  0%   { opacity: 0; transform: translateY(.28em) skewX(-8deg); }
+  60%  { opacity: 1; transform: translateY(-.05em) skewX(2deg); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* Solid drawing in 3D: the product frame stands up from a tilted plane */
+.product-stage { animation: product-in 1.15s var(--ease-out) .45s backwards; transform-origin: 50% 0; }
+@keyframes product-in {
+  from { opacity: 0; transform: perspective(1600px) rotateX(20deg) translateY(60px) scale(.95); }
+  to   { opacity: 1; transform: perspective(1600px) rotateX(0) translateY(0) scale(1); }
+}
+.product { transition: transform .6s var(--ease-out); will-change: transform; }
+
+/* Feed rows arrive on an arc, then their status pops */
+.js .feed-row.in { animation: arc-in .65s var(--ease-out) backwards; }
+.js .feed-row .pill { opacity: 0; }
+.js .feed-row.in .pill { opacity: 1; animation: pop .5s var(--ease-spring) .3s backwards; }
+.agenda .slot, .agenda-note { animation: rise .55s var(--ease-spring) backwards; }
+.agenda .slot:nth-child(1) { animation-delay: 1.95s; }
+.agenda .slot:nth-child(2) { animation-delay: 2.08s; }
+.agenda .slot:nth-child(3) { animation-delay: 2.21s; }
+.agenda-note { animation-delay: 2.4s; }
+
+/* Secondary action: the live dot keeps breathing */
+.pill.live .dot { position: relative; }
+.pill.live .dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 1px solid var(--teal); animation: ping 2.2s var(--ease-out) infinite; }
+
+/* Scroll reveals (one group at a time) */
+.js [data-reveal]:not(.is-in) { opacity: 0; }
+.js [data-reveal].is-in { animation: reveal .8s var(--ease-spring) var(--d, 0ms) backwards; }
+.js [data-stagger]:not(.is-in) > * { opacity: 0; }
+.js [data-stagger].is-in > * { animation: rise .55s var(--ease-spring) calc(var(--i, 0) * var(--step, 70ms) + var(--base, 150ms)) backwards; }
+.rank-row.out { --o: .5; }
+
+/* Rating: rows stagger, bars fill with overshoot, scores count up */
+#rating { --step: 60ms; --base: 250ms; }
+.js .bar i { transition: transform .9s var(--ease-spring); transition-delay: calc(var(--i, 0) * 60ms + 500ms); }
+.js #rating:not(.is-in) .cutoff::before, .js #rating:not(.is-in) .cutoff::after { transform: scaleX(0); }
+.cutoff::before { transform-origin: right; transition: transform .7s var(--ease-in-out) .8s; }
+.cutoff::after  { transform-origin: left;  transition: transform .7s var(--ease-in-out) .8s; }
+
+/* Phone: icon rings, transcript plays line by line, details tick in */
+.js .card:not(.is-in) .line { opacity: 0; }
+.card.is-in .line { animation: rise .5s var(--ease-out) backwards; }
+.card.is-in .line.caller { animation-delay: .3s; }
+.card.is-in .line.agent { animation-delay: .85s; }
+.card.is-in .call-top .i { animation: ring .7s var(--ease-in-out) .15s 2; transform-origin: 50% 50%; }
+.collected { --base: 1300ms; --step: 90ms; }
+.js .collected.is-in > * { animation-name: pop; }
+
+/* WhatsApp: question, then the reply swings in on an arc */
+.js .card:not(.is-in) .msg-in, .js .card:not(.is-in) .msg-out, .js .card:not(.is-in) .msg-foot { opacity: 0; }
+.card.is-in .msg-in { animation: rise .45s var(--ease-out) .3s backwards; }
+.card.is-in .msg-out { animation: arc-in-r .75s var(--ease-out) 1s backwards; }
+.card.is-in .msg-foot { animation: rise .4s var(--ease-out) 1.6s backwards; }
+
+/* CRM: each entry lands with a brief highlight */
+.log { --step: 180ms; --base: 300ms; }
+.log li { margin: 0 -8px; padding-left: 8px; padding-right: 8px; border-radius: 6px; }
+.js .log.is-in > li { animation: rise .55s var(--ease-spring) calc(var(--i, 0) * 180ms + 300ms) backwards, flash 1.4s ease-out calc(var(--i, 0) * 180ms + 300ms) backwards; }
+
+/* Rent timeline: the line draws, then each step; payment pops */
+.tl { --step: 260ms; --base: 350ms; }
+.js .tl::before { transform-origin: top; transition: transform 1.1s var(--ease-in-out) .25s; }
+.js .tl:not(.is-in)::before { transform: scaleY(0); }
+.tl.is-in li.paid::before { animation: pop-dot .7s var(--ease-spring) 1.2s backwards; }
+
+/* Assistant: icon scans while thinking, bubbles arrive on arcs */
+.chat .msg-q.fade-in { animation: arc-in-r .4s var(--ease-out) both; }
+.chat .msg-a.fade-in { animation: arc-in .55s var(--ease-out) both; }
+.assist.is-thinking .card-icon .i { animation: scan .5s var(--ease-in-out) infinite alternate; }
+
+/* Manager's day: tasks get struck one by one, the lime block wipes in */
+.strike { background: linear-gradient(rgba(75,81,92,.6), rgba(75,81,92,.6)) 0 58% / 100% 1px no-repeat; }
+.js .day-before li { text-decoration: none; }
+.js .day-before .strike { transition: background-size .45s var(--ease-in-out); transition-delay: calc(var(--i, 0) * 110ms + 450ms); }
+.js .day-before:not(.is-in) .strike { background-size: 0% 1px; }
+.day-after ul { --base: 500ms; --step: 120ms; }
+.js .result mark { background: transparent; position: relative; isolation: isolate; }
+.js .result mark::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--lime); border-radius: 6px; transform-origin: left; transition: transform .85s var(--ease-spring) .55s; }
+.js .result:not(.is-in) mark::before { transform: scaleX(0); }
+
+/* Pricing: ticks pop, totals bump on every change */
+.incl { --base: 300ms; --step: 80ms; }
+.bump { display: inline-block; transform-origin: left bottom; animation: bump .28s var(--ease-spring); }
+input[type=range]::-webkit-slider-thumb { transition: transform .2s var(--ease-spring); }
+input[type=range]:active::-webkit-slider-thumb { transform: scale(1.3); }
+input[type=range]::-moz-range-thumb { transition: transform .2s var(--ease-spring); }
+input[type=range]:active::-moz-range-thumb { transform: scale(1.3); }
+.units-in {
+  width: 5.2ch; padding: 2px 0; margin-right: 4px;
+  font: 600 22px/1.2 var(--font-body); font-variant-numeric: tabular-nums; color: var(--ivory);
+  background: transparent; border: 0; border-bottom: 1px solid var(--line); border-radius: 0;
+  transition: border-color .15s ease;
+}
+.units-in:hover { border-bottom-color: var(--steel); }
+.units-in:focus { outline: none; border-bottom-color: var(--brass); }
+
+/* Buttons: squash on press, spring back on release; arrow winds up before it goes */
+.btn, .ask { transition: background-color .18s ease, border-color .18s ease, color .18s ease, transform .5s var(--ease-spring); }
+.btn:active, .ask:active { transition-duration: .18s, .18s, .18s, var(--t-press); transform: scale(1.03, .92); }
+.btn:hover .arrow { transform: none; animation: nudge .4s var(--ease-in-out) forwards; }
+
+/* Cards lift; their icon reacts (secondary action) */
+.card-icon { transition: transform .45s var(--ease-spring), border-color .2s ease; }
+@media (hover: hover) {
+  .card { transition: transform .5s var(--ease-spring), border-color .25s ease; }
+  .card:hover { transform: translateY(-4px); border-color: #353B46; }
+  .card:hover .card-icon { transform: rotate(-8deg) scale(1.1); border-color: rgba(198,161,91,.45); }
+}
+
+/* Bigger hit areas, same visual size (Fitts) */
+.nav a, .foot-row nav a { padding: 12px 4px; margin: -12px -4px; }
+.logo { padding: 10px 0; margin: -10px 0; }
+.btn-sm { min-height: 40px; }
+[data-app] { cursor: pointer; user-select: none; }
+.ask { min-height: 40px; }
+input[type=range] { height: 32px; }
+
+/* Mobile dock: the frequent action stays in the thumb zone */
+.dock { display: none; }
+@media (max-width: 760px) {
+  .ask { min-height: 44px; }
+  .dock {
+    display: block; position: fixed; z-index: 60; left: 12px; right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(150%); transition: transform .5s var(--ease-spring);
+  }
+  .dock.show { transform: none; }
+  .dock .btn { width: 100%; min-height: 52px; box-shadow: 0 16px 40px -12px rgba(0,0,0,.7); }
+}
+
+/* Keyframes */
+@keyframes reveal { from { opacity: 0; transform: translateY(26px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: var(--o, 1); transform: none; } }
+@keyframes pop { 0% { opacity: 0; transform: scale(.6); } 60% { opacity: 1; transform: scale(1.12); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes pop-dot { 0% { transform: scale(0); } 70% { transform: scale(1.8); } 100% { transform: scale(1); } }
+@keyframes arc-in   { 0% { opacity: 0; transform: translate(-28px, 22px) rotate(-2.5deg); } 45% { opacity: 1; transform: translate(-9px, 4px) rotate(-.8deg); } 100% { opacity: 1; transform: none; } }
+@keyframes arc-in-r { 0% { opacity: 0; transform: translate(28px, 22px) rotate(2.5deg); }  45% { opacity: 1; transform: translate(9px, 4px) rotate(.8deg); }   100% { opacity: 1; transform: none; } }
+@keyframes ring { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-16deg); } 40% { transform: rotate(13deg); } 60% { transform: rotate(-8deg); } 80% { transform: rotate(4deg); } }
+@keyframes ping { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3); opacity: 0; } }
+@keyframes flash { 0% { background-color: rgba(198,161,91,.16); } 100% { background-color: rgba(198,161,91,0); } }
+@keyframes scan { from { transform: translate(-2px, 1px) rotate(-10deg); } to { transform: translate(2px, -1px) rotate(10deg); } }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.07); color: var(--brass-light); } 100% { transform: scale(1); } }
+@keyframes nudge { 0% { transform: translateX(0); } 35% { transform: translateX(-3px); } 100% { transform: translateX(4px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-delay: 0s !important; }
+  .pill.live .dot::after, .assist.is-thinking .card-icon .i, .card.is-in .call-top .i { animation: none !important; }
+  .product { transition: none; }
+}
+
+/* =====================================================================
+   Light mode: the default. The header toggle switches to dark
+   ===================================================================== */
+:root[data-theme="light"] {
+  --obsidian: #F5F3EF;   /* page */
+  --graphite: #FFFFFF;   /* cards */
+  --line: #DFDAD0;
+  --ivory: #0E1014;      /* text */
+  --ash: #555B66;
+  --steel: #8A909B;
+  --brass-ink: #7D6434;  /* brass for text and icons on light: keeps contrast */
+  color-scheme: light;
+}
+:root[data-theme="light"] body { background: var(--obsidian); }
+[data-theme="light"] .btn-primary { color: #08090B; }
+[data-theme="light"] .btn-primary:hover { background: #B8934E; }
+[data-theme="light"] .btn-secondary { border-color: #B9BDC4; }
+[data-theme="light"] .site-head { background: rgba(245,243,239,.82); }
+[data-theme="light"] .hero::before { background: radial-gradient(closest-side, rgba(198,161,91,.22), rgba(198,161,91,0)); }
+[data-theme="light"] .hero .lead { color: #4B515C; }
+[data-theme="light"] .hero .human { color: #0E1014; }
+/* Lime never as text on light: it becomes a block behind dark text */
+[data-theme="light"] .hl { color: #08090B; background: var(--lime); padding: 0 .1em; border-radius: 6px; }
+[data-theme="light"] .flutes {
+  background: repeating-linear-gradient(90deg,
+    rgba(255,255,255,.55) 0, rgba(255,255,255,.12) calc(var(--rib) * .18),
+    rgba(255,255,255,0) calc(var(--rib) * .45), rgba(110,90,49,.10) calc(var(--rib) * .92),
+    rgba(255,255,255,.6) var(--rib));
+}
+[data-theme="light"] .hero-light .l3 { background: radial-gradient(closest-side, rgba(198,161,91,.35), rgba(198,161,91,0)); }
+[data-theme="light"] .product { box-shadow: 0 40px 100px -50px rgba(60,48,24,.35); }
+[data-theme="light"] .eyebrow,
+[data-theme="light"] .chan, [data-theme="light"] .card-icon, [data-theme="light"] .step-n,
+[data-theme="light"] .slot-kind .i, [data-theme="light"] .slot time, [data-theme="light"] .line.agent .who,
+[data-theme="light"] .cutoff span, [data-theme="light"] .incl .i, [data-theme="light"] .req .i,
+[data-theme="light"] .msg-meta .chan-name .i, [data-theme="light"] .c-new,
+[data-theme="light"] .pill.brass { color: var(--brass-ink); }
+[data-theme="light"] .pill.ok, [data-theme="light"] .pill.late { color: #0E1014; }
+[data-theme="light"] .pill.ok .dot { background: #2FA08C; }
+[data-theme="light"] .card:hover { border-color: #CFC8BB; }
+/* The Paper section flips to the single dark moment of the light page */
+[data-theme="light"] .paper { background: #08090B; color: #F5F3EF; }
+[data-theme="light"] .paper .eyebrow { color: #C6A15B; }
+[data-theme="light"] .paper .day .v-label, [data-theme="light"] .paper .result .v-label,
+[data-theme="light"] .paper .result-note, [data-theme="light"] .paper .figures .from,
+[data-theme="light"] .paper .figures .to-arrow, [data-theme="light"] .day-before li { color: #868C97; }
+[data-theme="light"] .day-before, [data-theme="light"] .result { border-color: #272C35; }
+[data-theme="light"] .day-before li .i { color: #6A7280; }
+[data-theme="light"] .strike { background-image: linear-gradient(rgba(134,140,151,.7), rgba(134,140,151,.7)); }
+[data-theme="light"] .day-after { background: #14171D; color: #F5F3EF; border: 1px solid #272C35; }
+[data-theme="light"] .day-after .nothing { color: #868C97; border-top-color: #272C35; }
+[data-theme="light"] .figures mark { color: #08090B; }
+
+/* Theme toggle */
+.head-actions { display: flex; align-items: center; gap: 8px; }
+.theme-toggle {
+  width: 40px; height: 40px; border-radius: 8px; display: grid; place-items: center;
+  color: var(--ash); border: 1px solid transparent;
+  transition: color .15s ease, border-color .15s ease, transform .45s var(--ease-spring);
+}
+.theme-toggle:hover { color: var(--ivory); border-color: var(--line); }
+.theme-toggle:active { transform: scale(.9); transition-duration: var(--t-press); }
+.theme-toggle .i { transition: transform .5s var(--ease-spring); }
+.theme-toggle .i-sun { display: none; }
+[data-theme="light"] .theme-toggle .i-sun { display: block; }
+[data-theme="light"] .theme-toggle .i-moon { display: none; }
+.theme-toggle.spun .i { animation: spin-in .5s var(--ease-spring); }
+@keyframes spin-in { from { transform: rotate(-90deg) scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* =====================================================================
+   Voice agent: fluted brass orb + waveform
+   ===================================================================== */
+.orb {
+  --sx: 1; --sy: 1;
+  position: relative; flex: none; width: 76px; height: 76px; border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #F1DDB0 0, #C6A15B 50%, #7D6434 100%);
+  box-shadow: inset 0 -8px 16px rgba(70,52,20,.45), 0 14px 30px -14px rgba(198,161,91,.8);
+  transform: scale(var(--sx), var(--sy));
+  transition: transform .14s ease-out;
+}
+/* same ribs as the hero glass */
+.orb::after {
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.32) 0, rgba(255,255,255,0) 2.5px, rgba(60,45,15,.22) 6px, rgba(255,255,255,.3) 7px);
+  mix-blend-mode: soft-light;
+}
+.orb-sm { width: 40px; height: 40px; }
+.orb-sm::after { background: repeating-linear-gradient(90deg, rgba(255,255,255,.32) 0, rgba(255,255,255,0) 1.5px, rgba(60,45,15,.22) 3.5px, rgba(255,255,255,.3) 4px); }
+.orb-ring { position: absolute; inset: 0; border-radius: 50%; border: 1px solid #C6A15B; opacity: 0; pointer-events: none; }
+.orb[data-state="listening"] .orb-ring { animation: orb-ring 1.6s var(--ease-out) infinite; }
+.orb[data-state="listening"] .orb-ring + .orb-ring { animation-delay: .8s; }
+.orb[data-state="thinking"] { animation: orb-think 1s var(--ease-in-out) infinite; }
+@keyframes orb-ring { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.75); opacity: 0; } }
+@keyframes orb-think { 0%, 100% { transform: scale(1) rotate(0); } 50% { transform: scale(.93) rotate(10deg); } }
+
+.wave { display: flex; align-items: center; gap: 3px; height: 34px; }
+.wave i { flex: 1; max-width: 4px; min-width: 2px; height: 4px; border-radius: 2px; background: var(--brass); opacity: .9; transition: height .1s ease-out; }
+.wave-sm { height: 22px; margin: 12px 0 4px; }
+[data-theme="light"] .wave i { background: #A88645; }
+
+/* Segmented control (Type / Talk, call examples) */
+.seg-wrap { position: relative; display: inline-flex; align-self: flex-start; max-width: 100%; padding: 3px; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--graphite); }
+.seg {
+  position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px;
+  min-height: 36px; padding: 0 14px; border-radius: 999px;
+  font-size: 13px; font-weight: 500; color: var(--ash); white-space: nowrap;
+  transition: color .2s ease, transform .45s var(--ease-spring);
+}
+.seg .i { width: 15px; height: 15px; }
+.seg:hover { color: var(--ivory); }
+.seg.is-on, .seg.is-on:hover { color: #08090B; }
+.seg:active { transform: scale(.94); transition-duration: .2s, var(--t-press); }
+.seg-thumb { position: absolute; z-index: 0; top: 3px; bottom: 3px; left: 0; width: var(--w, 60px); transform: translateX(var(--x, 3px)); border-radius: 999px; background: var(--brass); transition: transform .5s var(--ease-spring), width .5s var(--ease-spring); }
+
+/* Talk mode in the assistant */
+.voice { flex: 1; display: flex; flex-direction: column; gap: 16px; min-height: 196px; }
+.voice[hidden], .chat[hidden] { display: none; }
+.voice-stage { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 18px; }
+.voice-mid { min-width: 0; }
+.voice-state { font-size: 13px; color: var(--ash); margin-bottom: 6px; min-height: 20px; }
+.mic {
+  position: relative; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--graphite); color: var(--brass); border: 1px solid var(--line);
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, transform .45s var(--ease-spring);
+}
+.mic .i { width: 20px; height: 20px; }
+.mic:hover { border-color: var(--brass); }
+.mic:active { transform: scale(1.06, .9); transition-duration: .2s, .2s, .2s, var(--t-press); }
+.mic.is-live { background: var(--brass); color: #08090B; border-color: var(--brass); }
+[data-theme="light"] .mic { color: #7D6434; }
+[data-theme="light"] .mic.is-live { color: #08090B; }
+.voice-lines { display: grid; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); }
+.vl { font-size: 14px; line-height: 1.55; min-height: 1.55em; }
+.vl .who { display: block; margin-bottom: 4px; font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ash); }
+.vl.agent .who { color: var(--brass); }
+[data-theme="light"] .vl.agent .who { color: #7D6434; }
+.vl .txt:empty::before { content: "\00a0"; }
+.vl.agent { transition: opacity .25s ease; }
+.vl.agent.is-off { opacity: 0; }
+
+/* Phone card: live call */
+.call .seg-wrap { margin-bottom: 14px; }
+.call-head { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 12px; }
+.call-id b { display: block; font-size: 14px; font-weight: 600; line-height: 1.3; }
+.call-meta { font-size: 12.5px; color: var(--ash); }
+.call-time { font: 500 12px/1 var(--font-mono); color: var(--ash); }
+.call-time.is-live { color: var(--teal); }
+[data-theme="light"] .call-time.is-live { color: #23806F; }
+.call-lines { display: grid; gap: 4px; min-height: 150px; align-content: start; }
+.cline { font-size: 14px; line-height: 1.55; padding: 6px 0; }
+.cline .who { display: block; margin-bottom: 5px; font: 500 11px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ash); }
+.cline.agent .who { color: var(--brass); }
+[data-theme="light"] .cline.agent .who { color: #7D6434; }
+.cline.caller { color: var(--ash); }
+.cline.in { animation: rise .4s var(--ease-out) backwards; }
+.outcomes { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; padding-top: 14px; border-top: 1px solid var(--line); min-height: 44px; }
+.outcomes .pill .i { width: 13px; height: 13px; color: var(--teal); }
+[data-theme="light"] .outcomes .pill .i { color: #23806F; }
+.outcomes .pill.pop { animation: pop .5s var(--ease-spring) backwards; }
+
+@media (max-width: 760px) {
+  .orb { width: 60px; height: 60px; }
+  .orb-sm { width: 40px; height: 40px; }
+  .voice-stage { gap: 14px; }
+  .seg { padding: 0 12px; min-height: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .orb, .orb-ring { animation: none !important; }
+}
 </style>
+<script>
+  /* Apply the saved theme before first paint */
+  /* Light is the default; dark is remembered once chosen */
+  try { if (localStorage.getItem("obsidia.theme") === "dark") document.documentElement.removeAttribute("data-theme"); } catch (e) {}
+</script>
 </head>
 <body>
 
-<div style="background:#08090B;color:#F5F3EF;font-family:'Schibsted Grotesk',system-ui,sans-serif;overflow-x:hidden">
+<!-- Icon sprite: one stroke family -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4.5-2 1.3a10 10 0 0 0 5.7 5.7l1.3-2 4.5 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 4.5 5.5a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.2A8 8 0 1 1 20 11.5z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4.5 7.5 7.5 5.5 7.5-5.5"/></symbol>
+  <symbol id="i-rank" viewBox="0 0 24 24"><path d="M4 6.5h9M4 12h6.5M4 17.5h4"/><path d="M17.5 18V6m-3 3 3-3 3 3"/></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="2.5"/><path d="M5 6v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5V6M5 12v6c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-6"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z"/><path d="M10 20v-5.5h4V20"/></symbol>
+  <symbol id="i-ask" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></symbol>
+  <symbol id="i-receipt" viewBox="0 0 24 24"><path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2z"/><path d="M9 8.5h6M9 12.5h6"/></symbol>
+  <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0 5 5L11 20a2.1 2.1 0 0 1-3-3z"/><path d="M14.7 6.3 17 4l3 3-2.3 2.3"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15.5" r="3.8"/><path d="m10.8 12.7 8.2-8.2M16 7.5l2.2 2.2M13.6 9.9l1.6 1.6"/></symbol>
+  <symbol id="i-door" viewBox="0 0 24 24"><path d="M6.5 20V4.5h8V20M4 20h16"/><path d="M11.5 12.5h.01"/><path d="M17.5 9.5v5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19.5 14.5A8 8 0 0 1 9.5 4.5a8 8 0 1 0 10 10z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3.5" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v2.5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+</svg>
 
-  <header style="position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(8,9,11,0.82);border-bottom:1px solid #272C35">
-    <div style="max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:24px">
-      <a href="#top" style="display:flex;align-items:center;gap:12px;color:#F5F3EF">
-        <span style="width:26px;height:26px;display:block;background:#C6A15B;clip-path:polygon(28% 0,100% 0,100% 72%,72% 100%,0 100%,0 28%)"></span>
-        <span style="font-size:15px;font-weight:600;letter-spacing:.24em">OBSIDIA</span>
-      </a>
-      <nav style="display:flex;gap:24px;margin-left:8px;flex:1;flex-wrap:wrap">
-        <a href="#modules" style="color:#868C97;font-size:14px" data-t="navModules"></a>
-        <a href="#qualification" style="color:#868C97;font-size:14px" data-t="navQualif"></a>
-        <a href="#incidents" style="color:#868C97;font-size:14px" data-t="navIncidents"></a>
-        <a href="#pricing" style="color:#868C97;font-size:14px" data-t="navPricing"></a>
-        <a href="#faq" style="color:#868C97;font-size:14px">FAQ</a>
-      </nav>
-      <div style="display:flex;border:1px solid #272C35;border-radius:8px;overflow:hidden;flex:none">
-        <button id="lang-en" type="button" style="background:transparent;color:#868C97;border:0;padding:8px 11px;font-size:12px;font-weight:600;font-family:'IBM Plex Mono',monospace;cursor:pointer">EN</button>
-        <button id="lang-fr" type="button" style="background:transparent;color:#868C97;border:0;padding:8px 11px;font-size:12px;font-weight:600;font-family:'IBM Plex Mono',monospace;cursor:pointer">FR</button>
-      </div>
-      <a class="obs-app obs-cta" target="_blank" rel="noopener" style="background:#C6A15B;color:#08090B;font-size:14px;font-weight:600;padding:10px 18px;border-radius:8px;white-space:nowrap" data-t="ctaShort"></a>
+<header class="site-head" id="top">
+  <div class="wrap head-row">
+    <a class="logo" href="#top" aria-label="Obsidia, back to top"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">Obsidia</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="head-actions">
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="Switch to light mode"><svg class="i i-moon" aria-hidden="true"><use href="#i-moon"/></svg><svg class="i i-sun" aria-hidden="true"><use href="#i-sun"/></svg></button>
+      <a class="btn btn-primary btn-sm" data-app href="#"><span class="spin" aria-hidden="true"></span><span class="btn-label">Get started</span></a>
     </div>
-  </header>
+  </div>
+</header>
 
-  <section id="top" style="position:relative;padding:96px 24px 72px;border-bottom:1px solid #272C35">
-    <div style="position:absolute;inset:0;background:radial-gradient(900px 420px at 18% -10%, rgba(198,161,91,0.16), transparent 70%);pointer-events:none"></div>
-    <div style="position:relative;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:56px;align-items:center">
-      <div>
-        <div style="display:inline-flex;align-items:center;gap:10px;border:1px solid #272C35;background:#14171D;border-radius:999px;padding:7px 14px;font-size:12px;color:#868C97;font-family:'IBM Plex Mono',monospace;letter-spacing:.04em">
-          <span style="width:7px;height:7px;border-radius:2px;background:#6FD8C4;animation:obsPulse 2.4s ease-in-out infinite"></span>
-          <span data-t="badge"></span>
-        </div>
-        <h1 id="obs-h1" style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(44px,5.6vw,76px);line-height:1.02;letter-spacing:-0.015em;margin:26px 0 0"></h1>
-        <p style="margin:24px 0 0;max-width:520px;font-size:17px;line-height:1.65;color:#868C97;text-wrap:pretty" data-t="heroSub"></p>
-        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:32px">
-          <a class="obs-app obs-cta" target="_blank" rel="noopener" style="background:#C6A15B;color:#08090B;font-size:15px;font-weight:600;padding:14px 24px;border-radius:9px" data-t="ctaLong"></a>
-          <a class="obs-outline" href="#modules" style="border:1px solid #6A7280;color:#F5F3EF;font-size:15px;font-weight:500;padding:14px 24px;border-radius:9px" data-t="ctaModules"></a>
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:28px;margin-top:36px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6A7280;letter-spacing:.04em">
-          <span data-t="heroKpi1"></span>
-          <span>24/7</span>
-          <span data-t="heroKpi3"></span>
-        </div>
-      </div>
+<main>
 
-      <div style="background:#14171D;border:1px solid #272C35;border-radius:16px;padding:20px;box-shadow:0 40px 80px -40px rgba(0,0,0,0.9)">
-        <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid #272C35">
-          <span style="font-size:13px;font-weight:600;color:#F5F3EF" data-t="inboxTitle"></span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6FD8C4" data-t="inboxMeta"></span>
-        </div>
-        <div id="obs-inbox" style="display:flex;flex-direction:column;gap:2px;padding-top:10px"></div>
-        <div style="margin-top:14px;border-top:1px solid #272C35;padding-top:14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280" data-t="inboxFoot1"></span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B" data-t="inboxFoot2"></span>
-        </div>
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-light" aria-hidden="true"><span class="l1"></span><span class="l2"></span><span class="l3"></span></div>
+  <div class="flutes" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1 class="h1">Your rentals run themselves. You just <em class="hl">open the doors.</em></h1>
+      <p class="lead">Obsidia answers every call, email and WhatsApp, rates every applicant, fills your CRM and handles tenants after the lease is signed. <span class="human">Property managers keep only what needs a human: viewings, key check-in and key check-out.</span></p>
+      <div class="cta-row">
+        <a class="btn btn-primary" data-app href="#"><span class="spin" aria-hidden="true"></span><span class="btn-label">Get started</span><svg class="i arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-secondary" href="#how">See how it works</a>
       </div>
     </div>
-  </section>
 
-  <section style="padding:28px 24px;border-bottom:1px solid #272C35;background:#08090B">
-    <div style="max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:22px 40px">
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280;letter-spacing:.12em" data-t="pmsLabel"></span>
-      <div style="display:flex;flex-wrap:wrap;gap:14px">
-        <span style="font-size:14px;color:#868C97">Apimo</span>
-        <span style="font-size:14px;color:#868C97">Hektor</span>
-        <span style="font-size:14px;color:#868C97">ICS</span>
-        <span style="font-size:14px;color:#868C97">Netty</span>
-        <span style="font-size:14px;color:#868C97">Roland Palace</span>
+    <div class="product-stage"><div class="product" role="img" aria-label="Obsidia dashboard for today: five conversations handled automatically, and three tasks left for the manager: a viewing, a key check-in and a key check-out.">
+      <div class="product-bar" aria-hidden="true">
+        <div class="where"><span class="logo-mark"></span><strong>Today</strong><span class="num" style="white-space:nowrap">Thu 19 Nov</span></div>
+        <span class="pill ok live"><span class="dot"></span>Answering</span>
       </div>
-    </div>
-  </section>
-
-  <section id="modules" style="padding:88px 24px;border-bottom:1px solid #272C35">
-    <div style="max-width:1180px;margin:0 auto">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em" data-t="modulesEyebrow"></div>
-      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(32px,4vw,50px);line-height:1.08;margin:16px 0 0;max-width:760px" data-t="modulesTitle"></h2>
-      <p style="margin:18px 0 0;max-width:620px;color:#868C97;font-size:16px;line-height:1.6" data-t="modulesSub"></p>
-      <div id="obs-modules" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-top:44px"></div>
-    </div>
-  </section>
-
-  <section id="qualification" style="padding:88px 24px;border-bottom:1px solid #272C35;background:#08090B">
-    <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:56px;align-items:center">
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em" data-t="qualEyebrow"></div>
-        <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:16px 0 0" data-t="qualTitle"></h2>
-        <p style="margin:18px 0 0;color:#868C97;font-size:16px;line-height:1.65;max-width:520px" data-t="qualSub"></p>
-        <div id="obs-qualchips" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:26px"></div>
-      </div>
-
-      <div style="background:#14171D;border:1px solid #272C35;border-radius:16px;padding:26px">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
-          <span style="font-size:13px;font-weight:600" data-t="simTitle"></span>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280">REF-2049-B</span>
-        </div>
-        <div style="margin-top:22px;display:flex;flex-direction:column;gap:22px">
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;color:#868C97;gap:12px"><span data-t="simIncome"></span><span id="sim-revenus" style="font-family:'IBM Plex Mono',monospace;color:#F5F3EF"></span></div>
-            <input id="sim-revenus-range" type="range" min="1200" max="8000" step="50" value="3200" style="width:100%;margin-top:10px;accent-color:#C6A15B" />
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:12px;color:#868C97;gap:12px"><span data-t="simRent"></span><span id="sim-loyer" style="font-family:'IBM Plex Mono',monospace;color:#F5F3EF"></span></div>
-            <input id="sim-loyer-range" type="range" min="400" max="3000" step="10" value="980" style="width:100%;margin-top:10px;accent-color:#C6A15B" />
-          </div>
-        </div>
-        <div style="margin-top:24px;border-top:1px solid #272C35;padding-top:20px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
-          <div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280;letter-spacing:.08em" data-t="simRatio"></div>
-            <div id="sim-taux" style="font-family:'IBM Plex Mono',monospace;font-size:42px;line-height:1.1;color:#F5F3EF"></div>
-          </div>
-          <div style="text-align:right">
-            <div style="display:inline-flex;align-items:center;gap:8px;border:1px solid #272C35;background:#08090B;border-radius:8px;padding:8px 12px;font-size:12px;color:#F5F3EF">
-              <span id="sim-status-dot" style="width:7px;height:7px;border-radius:2px;background:#6FD8C4"></span><span id="sim-status-label"></span>
+      <div class="product-body" aria-hidden="true">
+        <div class="pane">
+          <div class="pane-head"><span class="pane-title">Handled by Obsidia</span><span class="pane-meta num">38 today</span></div>
+          <div class="feed">
+            <div class="feed-row">
+              <span class="chan"><svg class="i"><use href="#i-phone"/></svg></span>
+              <div><div class="feed-who">Call · Léa Martin <time class="num">02:14</time></div><div class="feed-what">Asked about 14 rue Gambetta. Contact details, income and move-in date collected.</div></div>
+              <span class="pill ok"><span class="dot"></span>Lead created</span>
             </div>
-            <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280;margin-top:8px" data-t="simThreshold"></div>
-          </div>
-        </div>
-        <div style="margin-top:18px;height:6px;border-radius:999px;background:#08090B;overflow:hidden">
-          <div id="sim-gauge" style="height:100%;border-radius:999px;background:#6FD8C4;width:0%"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="incidents" style="padding:88px 24px;border-bottom:1px solid #272C35">
-    <div style="max-width:1180px;margin:0 auto">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em" data-t="incEyebrow"></div>
-      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:16px 0 0;max-width:720px" data-t="incTitle"></h2>
-      <div id="obs-timeline" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;margin-top:44px;background:#272C35;border:1px solid #272C35;border-radius:14px;overflow:hidden"></div>
-    </div>
-  </section>
-
-  <section id="comparaison" style="padding:88px 24px;border-bottom:1px solid #272C35;background:#08090B">
-    <div style="max-width:1180px;margin:0 auto">
-      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:0;max-width:680px" data-t="cmpTitle"></h2>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:40px">
-        <div style="border:1px solid #272C35;border-radius:14px;padding:28px">
-          <div style="font-size:13px;font-weight:600;color:#868C97" data-t="cmpWithout"></div>
-          <ul id="obs-cmp-without" style="margin:18px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px"></ul>
-        </div>
-        <div style="border:1px solid #C6A15B;border-radius:14px;padding:28px;background:linear-gradient(180deg, rgba(198,161,91,0.08), rgba(198,161,91,0))">
-          <div style="font-size:13px;font-weight:600;color:#E2C692" data-t="cmpWith"></div>
-          <ul id="obs-cmp-with" style="margin:18px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:14px"></ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="pricing" style="padding:88px 24px;border-bottom:1px solid #272C35">
-    <div style="max-width:1180px;margin:0 auto">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em" data-t="priceEyebrow"></div>
-      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:16px 0 0;max-width:720px" data-t="priceTitle"></h2>
-      <p style="margin:18px 0 0;max-width:600px;color:#868C97;font-size:16px;line-height:1.6" data-t="priceSub"></p>
-
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-top:44px;align-items:stretch">
-        <div style="border:1px solid #C6A15B;border-radius:16px;padding:32px;background:linear-gradient(180deg, rgba(198,161,91,0.09), rgba(198,161,91,0));display:flex;flex-direction:column">
-          <div style="display:flex;align-items:baseline;gap:10px">
-            <span style="font-family:'IBM Plex Mono',monospace;font-size:56px;line-height:1;color:#F5F3EF" data-t="priceBig"></span>
-            <span style="font-size:14px;color:#E2C692" data-t="priceUnit"></span>
-          </div>
-          <p style="margin:16px 0 0;color:#868C97;font-size:14px;line-height:1.6" data-t="priceNote"></p>
-          <ul id="obs-price-included" style="margin:24px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;flex:1"></ul>
-          <a class="obs-app obs-cta" target="_blank" rel="noopener" style="margin-top:28px;display:block;text-align:center;background:#C6A15B;color:#08090B;font-size:15px;font-weight:600;padding:14px 24px;border-radius:9px" data-t="ctaLong"></a>
-        </div>
-
-        <div style="background:#14171D;border:1px solid #272C35;border-radius:16px;padding:32px;display:flex;flex-direction:column">
-          <div style="font-size:13px;font-weight:600" data-t="calcTitle"></div>
-          <div style="margin-top:26px">
-            <div style="display:flex;justify-content:space-between;font-size:12px;color:#868C97;gap:12px"><span data-t="calcLots"></span><span id="calc-lots" style="font-family:'IBM Plex Mono',monospace;color:#F5F3EF"></span></div>
-            <input id="calc-lots-range" type="range" min="10" max="1000" step="10" value="120" style="width:100%;margin-top:10px;accent-color:#C6A15B" />
-          </div>
-          <div style="margin-top:28px;border-top:1px solid #272C35;padding-top:24px;display:flex;flex-direction:column;gap:14px;flex:1">
-            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
-              <span style="font-size:13px;color:#868C97" data-t="calcMonthly"></span>
-              <span id="calc-monthly" style="font-family:'IBM Plex Mono',monospace;font-size:32px;color:#C6A15B"></span>
+            <div class="feed-row">
+              <span class="chan"><svg class="i"><use href="#i-chat"/></svg></span>
+              <div><div class="feed-who">WhatsApp · Jonas Keller <time class="num">07:41</time></div><div class="feed-what">Asked which documents are needed. Answered in German.</div></div>
+              <span class="pill ok"><span class="dot"></span>Answered in 6 s</span>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
-              <span style="font-size:13px;color:#868C97" data-t="calcYearly"></span>
-              <span id="calc-yearly" style="font-family:'IBM Plex Mono',monospace;font-size:16px;color:#F5F3EF"></span>
+            <div class="feed-row">
+              <span class="chan"><svg class="i"><use href="#i-mail"/></svg></span>
+              <div><div class="feed-who">Email · Sophie Laurent <time class="num">08:03</time></div><div class="feed-what">Complete file received for 14 rue Gambetta. Rated and ranked.</div></div>
+              <span class="pill brass"><span class="dot"></span>Score 94 · top 10</span>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
-              <span style="font-size:13px;color:#868C97" data-t="calcPerLot"></span>
-              <span style="font-family:'IBM Plex Mono',monospace;font-size:16px;color:#F5F3EF" data-t="priceExact"></span>
+            <div class="feed-row">
+              <span class="chan"><svg class="i"><use href="#i-receipt"/></svg></span>
+              <div><div class="feed-who">Rent · Apt 4B, 8 av. Foch <time class="num">09:00</time></div><div class="feed-what">€1,150 six days late. Second reminder sent to the tenant.</div></div>
+              <span class="pill late"><span class="dot"></span>Reminder 2</span>
+            </div>
+            <div class="feed-row">
+              <span class="chan"><svg class="i"><use href="#i-tool"/></svg></span>
+              <div><div class="feed-who">Request · Apt 2A <time class="num">09:12</time></div><div class="feed-what">Leaking tap reported. Plumber booked for Friday 09:00.</div></div>
+              <span class="pill ok"><span class="dot"></span>Scheduled</span>
             </div>
           </div>
-          <p style="margin:24px 0 0;font-family:'IBM Plex Mono',monospace;font-size:11px;color:#6A7280;line-height:1.6" data-t="calcFoot"></p>
+        </div>
+        <div class="pane">
+          <div class="pane-head"><span class="pane-title">Your day</span><span class="pane-meta num">3 tasks</span></div>
+          <div class="agenda">
+            <div class="slot"><time class="num">10:30</time><div><div class="slot-kind"><svg class="i"><use href="#i-cal"/></svg>Viewing</div><div class="slot-where">14 rue Gambetta · 4 applicants from the top 10</div></div></div>
+            <div class="slot"><time class="num">14:00</time><div><div class="slot-kind"><svg class="i"><use href="#i-key"/></svg>Key check-in</div><div class="slot-where">8 avenue Foch, apt 3 · lease signed</div></div></div>
+            <div class="slot"><time class="num">17:30</time><div><div class="slot-kind"><svg class="i"><use href="#i-door"/></svg>Key check-out</div><div class="slot-where">22 rue Victor Hugo · inventory ready</div></div></div>
+          </div>
+          <p class="agenda-note">Everything else today was handled without you.</p>
         </div>
       </div>
+    </div></div>
+  </div>
+</section>
+
+<!-- Onboarding -->
+<section class="section" id="how">
+  <div class="wrap onb">
+    <div>
+      <div class="sec-head">
+        <p class="eyebrow">[ Onboarding · 2 minutes ]</p>
+        <h2 class="h2">Change one line on your listings. That's it.</h2>
+        <p class="lead">Replace the phone number and email address on your listings with your Obsidia contacts. From the next message on, Obsidia handles everything. You don't change software and you don't need training.</p>
+      </div>
+      <ol class="steps">
+        <li class="step"><span class="step-n">01</span><div><b>Get your Obsidia number and email</b><span>Created when you sign up.</span></div></li>
+        <li class="step"><span class="step-n">02</span><div><b>Paste them on your listings</b><span>Same listings, same portals, same software.</span></div></li>
+        <li class="step"><span class="step-n">03</span><div><b>Obsidia answers from the next message</b><span>Calls, emails and WhatsApp, day and night.</span></div></li>
+      </ol>
     </div>
-  </section>
 
-  <section style="padding:88px 24px;border-bottom:1px solid #272C35;background:#08090B">
-    <div id="obs-stats" style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px"></div>
-  </section>
-
-  <section id="faq" style="padding:88px 24px;border-bottom:1px solid #272C35">
-    <div style="max-width:880px;margin:0 auto">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#C6A15B;letter-spacing:.14em">[ FAQ ]</div>
-      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(30px,3.6vw,46px);line-height:1.1;margin:16px 0 36px" data-t="faqTitle"></h2>
-      <div id="obs-faq" style="border-top:1px solid #272C35"></div>
+    <div class="listing" id="listing" aria-label="Example listing with its phone number and email replaced by Obsidia contacts">
+      <div class="listing-photo"><img src="img/apartment.webp" width="1200" height="800" alt="Planted terrace of the flat with a view of the Eiffel Tower" loading="lazy" decoding="async" onload="this.parentNode.classList.add('has-img')" onerror="this.remove()" /><span class="pill">68 m² · 3 rooms · terrace</span></div>
+      <div class="listing-body">
+        <div class="listing-title">Top-floor 3-room flat with terrace</div>
+        <div class="listing-sub">14 rue Gambetta, Paris 16e · Eiffel Tower view</div>
+        <div class="listing-price num">€1,150 <small>/ month + €90 charges</small></div>
+      </div>
+      <div class="contact">
+        <p class="contact-label">Contact</p>
+        <div class="c-line"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg><div class="c-vals"><span class="c-old num">06 12 48 73 90</span><span class="c-new num">04 28 29 61 10</span></div></div>
+        <div class="c-line"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg><div class="c-vals"><span class="c-old">agence@gambetta-gestion.fr</span><span class="c-new">gambetta@in.obsidia.app</span></div></div>
+      </div>
+      <div class="c-status" aria-hidden="true"><span class="dot"></span>Obsidia answers this listing from now on.</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section style="padding:110px 24px;position:relative;overflow:hidden">
-    <div style="position:absolute;inset:0;background:radial-gradient(700px 320px at 50% 120%, rgba(198,161,91,0.18), transparent 70%)"></div>
-    <div style="position:relative;max-width:780px;margin:0 auto;text-align:center">
-      <h2 style="font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(34px,4.6vw,60px);line-height:1.05;margin:0" data-t="finalTitle"></h2>
-      <p style="margin:20px auto 0;max-width:520px;color:#868C97;font-size:16px;line-height:1.65" data-t="finalSub"></p>
-      <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:32px">
-        <a class="obs-app obs-cta" target="_blank" rel="noopener" style="background:#C6A15B;color:#08090B;font-size:15px;font-weight:600;padding:15px 28px;border-radius:9px" data-t="ctaLong"></a>
-        <a class="obs-outline" href="#pricing" style="border:1px solid #6A7280;color:#F5F3EF;font-size:15px;font-weight:500;padding:15px 28px;border-radius:9px" data-t="ctaPricing"></a>
+<!-- Features -->
+<section class="section" id="features" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">[ Features ]</p>
+      <h2 class="h2">Six jobs off your desk, from the first call to the last rent reminder.</h2>
+    </div>
+
+    <div class="features">
+
+      <!-- Main feature: applicant rating -->
+      <article class="card main span-2">
+        <div class="card-text">
+          <div class="card-icon"><svg class="i" aria-hidden="true"><use href="#i-rank"/></svg></div>
+          <h3>Your top 10 applicants, ready to visit</h3>
+          <p>For every new property, Obsidia collects and rates each applicant's file: income, contract, guarantor, completeness. Only the 10 best are invited to a viewing.</p>
+        </div>
+        <div class="visual" id="rating" aria-label="Example ranking: 46 applications rated for 14 rue Gambetta, top 10 invited to a viewing">
+          <div class="rank-head" aria-hidden="true">
+            <span>#</span><span>Applicant</span><span>Income</span><span class="col-contract">Contract</span><span class="col-guar">Guarantor</span><span class="col-file">File</span><span>Score</span>
+          </div>
+          <div class="rank-row"><span class="r num">1</span><span class="name">Sophie Laurent</span><span class="c good num">3.6×</span><span class="c good col-contract">Permanent</span><span class="c good col-guar">Visale</span><span class="c good col-file num">100%</span><span class="score"><b class="num">94</b><span class="bar"><i style="width:94%"></i></span></span></div>
+          <div class="rank-row"><span class="r num">2</span><span class="name">Mehdi Arfaoui</span><span class="c good num">3.2×</span><span class="c good col-contract">Permanent</span><span class="c good col-guar">Parent</span><span class="c good col-file num">100%</span><span class="score"><b class="num">91</b><span class="bar"><i style="width:91%"></i></span></span></div>
+          <div class="rank-row"><span class="r num">3</span><span class="name">Clara Weber</span><span class="c good num">3.1×</span><span class="c good col-contract">Civil servant</span><span class="c col-guar">None</span><span class="c good col-file num">95%</span><span class="score"><b class="num">88</b><span class="bar"><i style="width:88%"></i></span></span></div>
+          <div class="rank-more">Ranks 4 to 10 invited as well</div>
+          <div class="cutoff"><span>Viewing cut-off · top 10</span></div>
+          <div class="rank-row out"><span class="r num">11</span><span class="name">Julien Moreau</span><span class="c num">2.4×</span><span class="c col-contract">Fixed-term</span><span class="c col-guar">None</span><span class="c col-file num">70%</span><span class="score"><b class="num">61</b><span class="bar"><i style="width:61%"></i></span></span></div>
+          <div class="rank-row out" style="border-bottom:0"><span class="r num">12</span><span class="name">Anaïs Roux</span><span class="c num">2.1×</span><span class="c col-contract">Freelance</span><span class="c col-guar">None</span><span class="c col-file num">60%</span><span class="score"><b class="num">55</b><span class="bar"><i style="width:55%"></i></span></span></div>
+          <div class="rank-foot"><span class="num">46 applications rated · 14 rue Gambetta</span><span>Viewing Thu 10:30</span></div>
+        </div>
+      </article>
+
+      <!-- Phone agent -->
+      <article class="card">
+        <div class="card-text">
+          <div class="card-icon"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></div>
+          <h3>Every call answered, day and night</h3>
+          <p>The AI agent picks up, answers questions about the property, collects the applicant's details and never misses a lead. It also calls tenants and prospects: rent reminders, viewing confirmations, missing documents.</p>
+        </div>
+        <div class="visual call" id="call">
+          <div class="seg-wrap" role="group" aria-label="Example calls">
+            <button class="seg is-on" type="button" data-call="0" aria-pressed="true">Prospect calls in</button>
+            <button class="seg" type="button" data-call="1" aria-pressed="false">Agent calls a tenant</button>
+            <span class="seg-thumb" aria-hidden="true"></span>
+          </div>
+          <div class="call-head">
+            <div class="orb orb-sm" data-state="idle" aria-hidden="true"><span class="orb-ring"></span><span class="orb-ring"></span></div>
+            <div class="call-id"><b>Obsidia agent</b><span class="call-meta"><span id="callDir">Incoming</span> · <span id="callWho">Léa Martin, prospect</span></span></div>
+            <span class="call-time num" id="callTime">00:00</span>
+          </div>
+          <div class="wave wave-sm" id="callWave" aria-hidden="true"></div>
+          <div class="call-lines" id="callLines" aria-live="polite">
+            <p class="cline caller"><span class="who">Caller</span>Is the flat on rue Gambetta still available?</p>
+            <p class="cline agent"><span class="who">Obsidia</span>Yes, from 1 December. Rent is €1,150 plus €90 charges. Can I take your details?</p>
+          </div>
+          <div class="outcomes" id="callOut">
+            <span class="pill"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Name</span>
+            <span class="pill"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Phone</span>
+            <span class="pill"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Income</span>
+            <span class="pill"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Move-in date</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Email & WhatsApp -->
+      <article class="card">
+        <div class="card-text">
+          <div class="card-icon"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg></div>
+          <h3>Email and WhatsApp replies in seconds</h3>
+          <p>Availability, rent, charges, documents needed, viewing slots. Everything in one place, in the applicant's language.</p>
+        </div>
+        <div class="visual" aria-label="Example WhatsApp exchange in German">
+          <div class="msg-meta"><span class="chan-name"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>Jonas Keller</span><span class="pill">German</span></div>
+          <div class="msg msg-in">Hallo, welche Unterlagen brauche ich für die Wohnung?</div>
+          <div class="msg msg-out">Hallo Jonas, bitte senden Sie Ausweis, die letzten 3 Gehaltsabrechnungen und Ihren Arbeitsvertrag. Besichtigung: Do 10:30 oder Sa 11:00.</div>
+          <div class="msg-foot num">Replied in 6 s</div>
+        </div>
+      </article>
+
+      <!-- CRM -->
+      <article class="card">
+        <div class="card-text">
+          <div class="card-icon"><svg class="i" aria-hidden="true"><use href="#i-db"/></svg></div>
+          <h3>Your CRM fills itself</h3>
+          <p>Every call, message, document and applicant is logged automatically. Nothing is typed twice and nothing gets lost.</p>
+        </div>
+        <div class="visual" aria-label="Example CRM activity log">
+          <ul class="log">
+            <li><time class="num">23:50</time><span>Call logged<small>Léa Martin · 3 min 12 s</small></span></li>
+            <li><time class="num">08:04</time><span>3 payslips attached<small>Sophie Laurent · file 100% complete</small></span></li>
+            <li><time class="num">08:05</time><span>Score saved<small>94 · rank 1 of 46</small></span></li>
+            <li><time class="num">08:06</time><span>Viewing booked<small>Thu 10:30 · 14 rue Gambetta</small></span></li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- After letting -->
+      <article class="card">
+        <div class="card-text">
+          <div class="card-icon"><svg class="i" aria-hidden="true"><use href="#i-home"/></svg></div>
+          <h3>Tenants handled after the lease</h3>
+          <p>Obsidia claims missed rent with automatic reminders and processes tenant requests, from repairs to documents and questions.</p>
+        </div>
+        <div class="visual" aria-label="Example rent reminder timeline and tenant request">
+          <ul class="tl">
+            <li><span>Rent due · Apt 5</span><time class="num">5 Nov</time></li>
+            <li class="late"><span>Reminder 1 sent</span><time class="num">8 Nov</time></li>
+            <li class="late"><span>Reminder 2 sent</span><time class="num">12 Nov</time></li>
+            <li class="paid"><span>€1,150 received</span><time class="num">13 Nov</time></li>
+          </ul>
+          <div class="req"><svg class="i" aria-hidden="true"><use href="#i-tool"/></svg><span>Leaking tap · Apt 2A<small>Plumber booked Fri 09:00, tenant informed</small></span></div>
+        </div>
+      </article>
+
+      <!-- Assistant (interactive) -->
+      <article class="card span-3 assist">
+        <div class="card-text">
+          <div class="card-icon"><svg class="i" aria-hidden="true"><use href="#i-ask"/></svg></div>
+          <h3>Ask anything about your portfolio, or just talk to it</h3>
+          <p>Rents, leases, renovations, late payments. Type your question or say it out loud, like you would to a colleague. You get the answer in seconds.</p>
+        </div>
+        <div class="visual">
+          <div class="seg-wrap" role="group" aria-label="How to ask">
+            <button class="seg" type="button" data-mode="type" aria-pressed="false">Type</button>
+            <button class="seg is-on" type="button" data-mode="talk" aria-pressed="true"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg>Talk</button>
+            <span class="seg-thumb" aria-hidden="true"></span>
+          </div>
+          <div class="chat" id="chat" aria-live="polite" hidden></div>
+          <div class="voice" id="voice">
+            <div class="voice-stage">
+              <div class="orb" id="orb" data-state="idle" aria-hidden="true"><span class="orb-ring"></span><span class="orb-ring"></span></div>
+              <div class="voice-mid">
+                <p class="voice-state" id="voiceState">Tap the mic or pick a question</p>
+                <div class="wave" id="voiceWave" aria-hidden="true"></div>
+              </div>
+              <button class="mic" type="button" id="mic" aria-label="Talk to Obsidia (demo)"><svg class="i" aria-hidden="true"><use href="#i-mic"/></svg></button>
+            </div>
+            <div class="voice-lines" aria-live="polite">
+              <p class="vl you"><span class="who">You</span><span class="txt" id="vYou"></span></p>
+              <p class="vl agent" id="vAgentLine"><span class="who">Obsidia</span><span class="txt" id="vAgent"></span></p>
+            </div>
+          </div>
+          <div class="asks" role="group" aria-label="Example questions">
+            <button class="ask" type="button" data-q="0" aria-pressed="true">What's the rent on 12 rue Gambetta?</button>
+            <button class="ask" type="button" data-q="1" aria-pressed="false">When was the last renovation in building B?</button>
+            <button class="ask" type="button" data-q="2" aria-pressed="false">Which tenants are late this month?</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- The manager's new day: the one Paper section -->
+<section class="section paper" id="day">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">[ The manager's new day ]</p>
+      <h2 class="h2">Three tasks left on your list. Nothing else.</h2>
+    </div>
+
+    <div class="days">
+      <div class="day day-before">
+        <p class="v-label">Before</p>
+        <ul>
+          <li><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>Calls</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg>Emails</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>WhatsApp</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-rank"/></svg>Sorting files</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-receipt"/></svg>Chasing rent</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-db"/></svg>Logging everything</li>
+        </ul>
+      </div>
+      <div class="day day-after">
+        <p class="v-label">With Obsidia</p>
+        <ul>
+          <li><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>Viewings</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-key"/></svg>Key check-in</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-door"/></svg>Key check-out</li>
+        </ul>
+        <p class="nothing">Calls, messages, files, rent and the CRM run without you.</p>
       </div>
     </div>
-  </section>
 
-  <footer style="border-top:1px solid #272C35;padding:36px 24px">
-    <div style="max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:12px">
-        <span style="width:20px;height:20px;display:block;background:#C6A15B;clip-path:polygon(28% 0,100% 0,100% 72%,72% 100%,0 100%,0 28%)"></span>
-        <span style="font-size:13px;font-weight:600;letter-spacing:.24em">OBSIDIA</span>
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6A7280" data-t="tagline"></span>
+    <div class="result">
+      <p class="v-label">Units per manager</p>
+      <div class="figures" aria-label="From 80 to 100 units per manager, to 250 to 350">
+        <span class="from">80–100</span><span class="to"><span class="to-arrow" aria-hidden="true">→</span><mark>250–350</mark></span>
       </div>
-      <div style="display:flex;gap:22px;font-size:13px">
-        <a href="#modules" style="color:#868C97" data-t="navModules"></a>
-        <a href="#pricing" style="color:#868C97" data-t="navPricing"></a>
-        <a class="obs-app" target="_blank" rel="noopener" style="color:#C6A15B" data-t="navApp"></a>
-      </div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#6A7280">© 2026 Obsidia</div>
+      <p class="result-note">Same team, three times the portfolio. Your managers spend their day on site, not in the inbox.</p>
     </div>
-  </footer>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="section" id="pricing">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">[ Pricing ]</p>
+      <h2 class="h2">One price per unit. Everything included.</h2>
+    </div>
+
+    <div class="price-card">
+      <div class="price-main">
+        <div class="price-big"><b>€10</b><span>per unit<br>per month</span></div>
+        <ul class="incl">
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>All features included</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>Unlimited users</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>No setup fee</li>
+          <li><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>No commitment</li>
+        </ul>
+        <a class="btn btn-primary" data-app href="#"><span class="spin" aria-hidden="true"></span><span class="btn-label">Get started</span><svg class="i arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="calc">
+        <label class="v-label" for="units">Your portfolio</label>
+        <div class="calc-row"><label class="calc-units"><input id="unitsIn" class="units-in num" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="250" aria-label="Number of units" /> units</label></div>
+        <input type="range" id="units" min="10" max="1500" step="10" value="250" aria-describedby="perMonth" />
+        <div class="scale num" aria-hidden="true"><span>10</span><span>500</span><span>1,000</span><span>1,500</span></div>
+        <div class="team" aria-live="polite">
+          <div class="team-head"><span class="v-label">Managers needed</span><span class="team-save" id="mgrSave">2 fewer</span></div>
+          <div class="team-row"><span class="team-name">Today</span><span class="team-bar"><i id="barToday"></i></span><b class="num" id="mgrToday">3</b></div>
+          <div class="team-row is-obs"><span class="team-name">With Obsidia</span><span class="team-bar"><i id="barObs"></i></span><b class="num" id="mgrObs">1</b></div>
+          <p class="team-note">At 80–100 units per manager today, 250–350 with Obsidia.</p>
+        </div>
+        <div class="totals">
+          <div class="total"><span class="v-label">Per month</span><b id="perMonth">€2,500</b></div>
+          <div class="total"><span class="v-label">Per year</span><b id="perYear">€30,000</b></div>
+        </div>
+        <p class="calc-note">Every feature and every user included in this price.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final">
+  <div class="wrap">
+    <h2 class="h2">Grow your portfolio without growing your team.</h2>
+    <p class="lead">Change the contacts on your listings today. Obsidia answers the next message.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary btn-lg" data-app href="#"><span class="spin" aria-hidden="true"></span><span class="btn-label">Get started</span><svg class="i arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="foot-light" aria-hidden="true"><span class="f1"></span><span class="f2"></span><span class="f3"></span><span class="f-word">Obsidia</span></div>
+  <div class="flutes flutes-foot" aria-hidden="true"></div>
+  <div class="wrap foot-row">
+    <a class="logo" href="#top" aria-label="Obsidia, back to top"><span class="logo-mark" aria-hidden="true"></span><span class="logo-word">Obsidia</span></a>
+    <nav aria-label="Footer">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <span>© 2026 Obsidia</span>
+  </div>
+</footer>
+
+<!-- Mobile dock: shown once the hero is out of view, hidden near the final CTA -->
+<div class="dock" id="dock" inert>
+  <a class="btn btn-primary" data-app href="#"><span class="spin" aria-hidden="true"></span><span class="btn-label">Get started</span><svg class="i arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
 </div>
 
 <script>
-// ============================================================================
-// Obsidia landing — standalone implementation of the CMH/DC "design code".
-// The original relied on a proprietary runtime (support.js); this reproduces
-// its DCLogic component (bilingual copy, simulators, FAQ) in vanilla JS.
-// ============================================================================
+/* Destination of every "Get started" button.
+   Empty = no app yet: buttons keep their look and press feedback but go nowhere.
+   Set a URL here when the app is live and they open it with a loading state. */
+var APP_URL = "";
 
-// --- configuration (was <script> data-props on the source) -----------------
-var APP_URL = "https://obsidia.base44.app";
-var DEFAULT_LANG = "en";
-var SHOW_COMPARISON = true;
+(function () {
+  var doc = document.documentElement;
+  doc.classList.add("js");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// --- translations (verbatim from the source) --------------------------------
-var COPY = {
-  en: {
-    navModules: "Modules", navQualif: "Screening", navIncidents: "Incidents", navPricing: "Pricing", navApp: "App",
-    ctaShort: "Open the app", ctaLong: "Open the application", ctaModules: "See the 6 modules", ctaPricing: "See pricing",
-    badge: "Automation for long-term rental management",
-    h1a: "Your managed portfolio", h1b: "runs itself.",
-    heroSub: "Obsidia answers applicants, screens files, books viewings, handles incidents and issues rent receipts. Your team stops re-keying data — it arbitrates.",
-    heroKpi1: "100% of first-level requests", heroKpi3: "Connected to your property software",
-    inboxTitle: "Unified inbox", inboxMeta: "● 4 handled by AI",
-    inboxFoot1: "average response time · 6 s", inboxFoot2: "1,284 follow-ups this month",
-    inbox: [
-      ["WHATSAPP", "“Is the 2-bed on Gambetta street still available?”", "answered 4 s", "#6FD8C4"],
-      ["SMS", "Documents received · 4 files verified (OCR)", "score 84", "#6FD8C4"],
-      ["WIDGET", "Viewing booked — Thursday 2:30 pm, 6 applicants", "calendar synced", "#9AA3B2"],
-      ["E-MAIL", "Bathroom leak · unit 14B", "urgent", "#F0766A"]
-    ],
-    pmsLabel: "NATIVE PMS CONNECTORS",
-    modulesEyebrow: "[ THE PLATFORM ]",
-    modulesTitle: "Six modules covering the rental cycle end to end",
-    modulesSub: "From an applicant's first question to the closing of a claim, including the rent receipt and the owner's report.",
-    modules: [
-      ["MODULE 01", "Conversational engine and multichannel screening", "WhatsApp, SMS, web chat, Messenger and email in a single inbox. The text and voice agent handles 100% of first-level requests, 24/7.", ["Dynamic pre-screening questionnaire", "Automatic rent-to-income ratio calculation", "Secure upload and OCR verification of documents", "File scoring and ranking"]],
-      ["MODULE 02", "Autonomous viewing management", "Google, Outlook and Cal.com calendars synced both ways. The eligible applicant picks their own slot.", ["Self-service booking via secure link", "SMS and email reminders at D-1 and H-2", "Group viewings with a cap per slot", "Automatic feedback 1 hour after the viewing"]],
-      ["MODULE 03", "Owner portal and financial reporting", "Every landlord tracks their portfolio in real time, on web and mobile, without calling the agency.", ["Rent collection status and receipt history", "Chatbot querying the property software directly", "Occupancy rate, gross and net yields", "One-click approval of works quotes"]],
-      ["MODULE 04", "Incidents, claims and maintenance", "The tenant reports in a few clicks, photos included. The decision tree attempts an immediate fix, otherwise it qualifies the urgency.", ["Contractor directory by trade and area", "Automated quote requests with photos", "Three-way appointment scheduling", "Time-stamped timeline through to closing"]],
-      ["MODULE 05", "Administrative and legal automation", "Rent receipts, payment notices, arrears chasing and tailored legal letters generated without intervention.", ["Graduated dunning at D+3, D+10, D+15", "Alerts on index reviews, notices, charge reconciliation", "Watch on mandatory surveys (EPC, lead, gas…)", "Assisted drafting of notices and addenda"]],
-      ["MODULE 06", "Connectivity, API and audit trail", "Properties, units, leases, tenants and owners synced in real time with your PMS.", ["Apimo, Hektor, ICS, Netty, Roland Palace connectors", "Tamper-proof audit log of every action", "Steering: AI volume, conversion, workload avoided"]]
-    ],
-    qualEyebrow: "[ SCREENING ]",
-    qualTitle: "The rent-to-income ratio is computed before you open the file",
-    qualSub: "Net income, contract type, probation period, guarantor or state guarantee: the funnel collects live and cross-checks against the rent including charges. Eligibility shows instantly, the file is scored, ranked, and documents are OCR-verified.",
-    qualChips: ["Permanent contract", "Fixed-term", "Self-employed", "Student", "State guarantee"],
-    simTitle: "Affordability simulator", simIncome: "Household net income", simRent: "Rent including charges",
-    simRatio: "RENT-TO-INCOME", simThreshold: "agency threshold · 33%",
-    ok: "Eligible", mid: "To review", ko: "Outside criteria",
-    incEyebrow: "[ INCIDENTS ]",
-    incTitle: "From report to closing, without a single phone call",
-    timeline: [
-      ["01 · 09:12", "#F0766A", "Report", "The tenant describes the leak, picks “plumbing” and attaches two photos."],
-      ["02 · 09:13", "#9AA3B2", "Guided diagnosis", "The decision tree rules out a false alarm and qualifies it as absolute urgency."],
-      ["03 · 09:21", "#9AA3B2", "Quotes requested", "Three plumbers in the area receive the description and the photos."],
-      ["04 · 11:40", "#9AA3B2", "Owner approval", "The landlord approves the selected quote in one click from their portal."],
-      ["05 · 14:05", "#6FD8C4", "Job done and closed", "Slot matched across contractor, tenant and agency, then timeline archived."]
-    ],
-    cmpTitle: "The same week of management, with and without Obsidia",
-    cmpWithout: "Without Obsidia", cmpWith: "With Obsidia",
-    without: [
-      "The same questions repeated all day across five channels",
-      "Incomplete files sorted by hand, document by document",
-      "Viewings arranged by phone, and applicants who never show up",
-      "An owner calling to ask whether the rent came in",
-      "Missed arrears reminders and lease deadlines slipping by"
-    ],
-    with: [
-      "A single inbox, instant answers 24/7",
-      "Files OCR-verified, scored and ranked automatically",
-      "Self-service viewings, D-1 and H-2 reminders, post-visit feedback",
-      "Landlords check collections and approve quotes on their own",
-      "Graduated dunning and alerts on index, notices, surveys, guarantees"
-    ],
-    priceEyebrow: "[ PRICING ]",
-    priceTitle: "€10 per month, per managed unit",
-    priceSub: "One price, every module included. No setup fee, no per-seat licence, no commitment — you pay for the units actually under management.",
-    priceBig: "€10", priceExact: "€10.00",
-    priceUnit: "/ month / managed unit",
-    priceNote: "Billed monthly on the number of units in your portfolio. Add or remove units at any time.",
-    priceIncluded: [
-      "All six modules, no option to unlock",
-      "Unlimited users in the agency",
-      "Unlimited conversations, text and voice, 24/7",
-      "Native PMS connector included",
-      "Owner and tenant portals included",
-      "Full audit trail and steering dashboard"
-    ],
-    calcTitle: "Estimate your cost", calcLots: "Units under management",
-    calcMonthly: "Monthly", calcYearly: "Yearly", calcPerLot: "Per unit",
-    calcFoot: "Indicative estimate, excl. VAT · €10 / unit / month",
-    stats: [
-      ["100%", "of first-level requests handled without a manager"],
-      ["24/7", "text and voice agent, weekends and nights included"],
-      ["D+3", "first amicable reminder triggered on arrears"],
-      ["0", "re-keying: everything flows back into your property software"]
-    ],
-    faqTitle: "Frequently asked questions",
-    faq: [
-      ["Does Obsidia replace my property management software?", "No. Obsidia plugs into it. Native connectors (Apimo, Hektor, ICS, Netty, Roland Palace…) sync properties, units, leases, tenants and owners in real time. Your property software stays the source of truth."],
-      ["How is the rent-to-income ratio calculated?", "The pre-screening funnel collects household net income, contract type, probation period and whether there is a guarantor or a state guarantee, then cross-checks against the rent including charges. The threshold (33% or 36%) is configurable per agency and eligibility shows instantly."],
-      ["Are supporting documents really verified?", "Applicants upload documents through a secure interface. OCR reads payslips, tax notices, ID and proof of address, then checks consistency and authenticity before scoring the file."],
-      ["What happens with a technical emergency at night?", "The reporting portal is open 24/7. Guided diagnosis rules out false alarms, qualifies severity (absolute emergency, rapid intervention, standard maintenance) and triggers quote requests to contractors in the area, with an alert to the manager."],
-      ["Do we stay in control of decisions?", "Yes. Obsidia takes the first level and prepares the decision: the manager arbitrates, the owner approves quotes. Every action, message and document is written to a tamper-proof audit log."],
-      ["What does €10 per unit actually cover?", "Every module, unlimited agency users, unlimited text and voice conversations, the PMS connector and both the owner and tenant portals. Billing follows the number of units under management, month by month."]
-    ],
-    finalTitle: "The agency that never re-keys anything.",
-    finalSub: "Plug Obsidia into your management software and let the platform take the first level, from screening to rent receipt.",
-    tagline: "Automation for real estate"
-  },
-  fr: {
-    navModules: "Modules", navQualif: "Qualification", navIncidents: "Incidents", navPricing: "Tarif", navApp: "Application",
-    ctaShort: "Ouvrir l'app", ctaLong: "Ouvrir l'application", ctaModules: "Voir les 6 modules", ctaPricing: "Voir le tarif",
-    badge: "Automatisation pour la gestion locative longue durée",
-    h1a: "Vos mandats de gestion", h1b: "se gèrent seuls.",
-    heroSub: "Obsidia répond aux candidats, qualifie les dossiers, planifie les visites, traite les incidents et sort les quittances. Votre équipe ne ressaisit plus rien — elle arbitre.",
-    heroKpi1: "100% des requêtes de niveau 1", heroKpi3: "Connecté à votre logiciel métier",
-    inboxTitle: "Boîte de réception unifiée", inboxMeta: "● 4 traitées par l'IA",
-    inboxFoot1: "temps moyen de réponse · 6 s", inboxFoot2: "1 284 relances ce mois",
-    inbox: [
-      ["WHATSAPP", "« Le T3 rue Gambetta est encore libre ? »", "répondu 4 s", "#6FD8C4"],
-      ["SMS", "Pièces reçues · 4 documents vérifiés (OCR)", "score 84", "#6FD8C4"],
-      ["WIDGET", "Visite réservée — jeudi 14h30, 6 candidats", "agenda synchro", "#9AA3B2"],
-      ["E-MAIL", "Fuite salle de bain · lot 14B", "urgence", "#F0766A"]
-    ],
-    pmsLabel: "CONNECTEURS NATIFS PMS",
-    modulesEyebrow: "[ LA PLATEFORME ]",
-    modulesTitle: "Six modules qui couvrent le cycle locatif de bout en bout",
-    modulesSub: "De la première question d'un candidat à la clôture d'un sinistre, en passant par la quittance et le rapport au propriétaire.",
-    modules: [
-      ["MODULE 01", "Moteur conversationnel et qualification multicanal", "WhatsApp, SMS, chat web, Messenger et e-mail dans une seule boîte. L'agent texte et voix traite 100% des requêtes de premier niveau, 24/7.", ["Questionnaire dynamique de pré-qualification", "Calcul automatique du taux d'effort", "Upload sécurisé et vérification OCR des pièces", "Scorage et classement des dossiers"]],
-      ["MODULE 02", "Gestion autonome des visites", "Agendas Google, Outlook et Cal.com synchronisés dans les deux sens. Le candidat éligible choisit lui-même son créneau.", ["Réservation en self-service par lien sécurisé", "Rappels SMS et e-mail à J-1 et H-2", "Visites groupées avec quota par créneau", "Feedback automatique 1 h après la visite"]],
-      ["MODULE 03", "Portail propriétaire et restitution financière", "Chaque bailleur suit son parc en temps réel, web et mobile, sans appeler l'agence.", ["Statut des encaissements et historique des quittances", "Chatbot interrogeant directement le logiciel métier", "Taux d'occupation, rendements bruts et nets", "Validation des devis de travaux en un clic"]],
-      ["MODULE 04", "Incidents, sinistres et maintenance", "Le locataire déclare en quelques clics, photos comprises. L'arbre de décision tente la résolution immédiate, sinon il qualifie l'urgence.", ["Annuaire des prestataires par métier et zone", "Demande de devis automatisée avec photos", "Planification tripartite du rendez-vous", "Timeline horodatée jusqu'à la clôture"]],
-      ["MODULE 05", "Automatisation administrative et juridique", "Quittances, avis d'échéance, relances d'impayés et actes personnalisés générés sans intervention.", ["Dunning gradué J+3, J+10, J+15", "Alertes IRL, préavis, régularisation de charges", "Veille sur les diagnostics obligatoires (DPE, CREP, gaz…)", "Rédaction assistée des congés et avenants"]],
-      ["MODULE 06", "Connectivité, API et traçabilité", "Biens, lots, baux, locataires et propriétaires synchronisés en temps réel avec votre PMS.", ["Connecteurs Apimo, Hektor, ICS, Netty, Roland Palace", "Journal d'audit infalsifiable de chaque action", "Pilotage : volumétrie IA, conversion, charge évitée"]]
-    ],
-    qualEyebrow: "[ QUALIFICATION ]",
-    qualTitle: "Le taux d'effort est calculé avant que vous ouvriez le dossier",
-    qualSub: "Revenus nets, type de contrat, période d'essai, garant ou Visale : le tunnel collecte en direct et croise avec le loyer charges comprises. L'éligibilité s'affiche immédiatement, le dossier est scoré, classé, et les pièces sont vérifiées par OCR.",
-    qualChips: ["CDI", "CDD", "Indépendant", "Étudiant", "Garantie Visale"],
-    simTitle: "Simulateur de solvabilité", simIncome: "Revenus nets du foyer", simRent: "Loyer charges comprises",
-    simRatio: "TAUX D'EFFORT", simThreshold: "seuil agence · 33%",
-    ok: "Éligible", mid: "À arbitrer", ko: "Hors critères",
-    incEyebrow: "[ INCIDENTS ]",
-    incTitle: "Du signalement à la clôture, sans un seul appel téléphonique",
-    timeline: [
-      ["01 · 09:12", "#F0766A", "Signalement", "Le locataire décrit la fuite, choisit « plomberie » et joint deux photos."],
-      ["02 · 09:13", "#9AA3B2", "Diagnostic guidé", "L'arbre de décision écarte la fausse alerte et qualifie l'urgence absolue."],
-      ["03 · 09:21", "#9AA3B2", "Devis demandé", "Trois plombiers de la zone reçoivent la description et les photos."],
-      ["04 · 11:40", "#9AA3B2", "Validation bailleur", "Le propriétaire valide le devis retenu en un clic depuis son espace."],
-      ["05 · 14:05", "#6FD8C4", "Intervention et clôture", "Créneau croisé prestataire / locataire / agence, puis timeline archivée."]
-    ],
-    cmpTitle: "La même semaine de gestion, avec et sans Obsidia",
-    cmpWithout: "Sans Obsidia", cmpWith: "Avec Obsidia",
-    without: [
-      "Les mêmes questions répétées toute la journée sur cinq canaux",
-      "Des dossiers incomplets triés à la main, pièce par pièce",
-      "Des visites calées par téléphone, et des candidats qui ne viennent pas",
-      "Un propriétaire qui rappelle pour savoir si le loyer est tombé",
-      "Des relances d'impayés oubliées et des échéances de bail qui passent"
-    ],
-    with: [
-      "Une seule boîte de réception, réponses instantanées 24/7",
-      "Dossiers vérifiés par OCR, scorés et classés automatiquement",
-      "Visites en self-service, rappels J-1 et H-2, feedback post-visite",
-      "Le bailleur consulte ses encaissements et valide ses devis seul",
-      "Dunning gradué et alertes IRL, préavis, diagnostics, GLI"
-    ],
-    priceEyebrow: "[ TARIF ]",
-    priceTitle: "10 € par mois, par lot géré",
-    priceSub: "Un seul prix, tous les modules inclus. Pas de frais d'installation, pas de licence par utilisateur, sans engagement — vous payez les lots réellement sous gestion.",
-    priceBig: "10 €", priceExact: "10,00 €",
-    priceUnit: "/ mois / lot géré",
-    priceNote: "Facturé au mois sur le nombre de lots de votre portefeuille. Ajoutez ou retirez des lots à tout moment.",
-    priceIncluded: [
-      "Les six modules, aucune option à débloquer",
-      "Utilisateurs illimités dans l'agence",
-      "Conversations illimitées, texte et voix, 24/7",
-      "Connecteur PMS natif inclus",
-      "Espaces propriétaire et locataire inclus",
-      "Journal d'audit complet et tableau de pilotage"
-    ],
-    calcTitle: "Estimez votre coût", calcLots: "Lots sous gestion",
-    calcMonthly: "Par mois", calcYearly: "Par an", calcPerLot: "Par lot",
-    calcFoot: "Estimation indicative, hors taxes · 10 € / lot / mois",
-    stats: [
-      ["100%", "des requêtes de premier niveau traitées sans gestionnaire"],
-      ["24/7", "agent texte et voix, y compris le week-end et la nuit"],
-      ["J+3", "première relance amiable déclenchée à l'impayé"],
-      ["0", "ressaisie : tout repart dans votre logiciel métier"]
-    ],
-    faqTitle: "Les questions fréquentes",
-    faq: [
-      ["Obsidia remplace-t-il mon logiciel de gestion locative ?", "Non. Obsidia se branche dessus. Les connecteurs natifs (Apimo, Hektor, ICS, Netty, Roland Palace…) synchronisent en temps réel les biens, les lots, les baux, les locataires et les propriétaires. Votre logiciel métier reste la source de vérité."],
-      ["Comment le taux d'effort est-il calculé ?", "Le tunnel de pré-qualification collecte les revenus nets du foyer, le type de contrat, la période d'essai et la présence d'un garant ou d'une garantie Visale, puis les croise avec le loyer charges comprises du bien. Le seuil (33% ou 36%) est paramétrable par l'agence et le statut d'éligibilité s'affiche immédiatement."],
-      ["Les pièces justificatives sont-elles réellement vérifiées ?", "Les candidats déposent leurs documents dans une interface sécurisée. L'OCR lit les bulletins de salaire, avis d'imposition, pièces d'identité et justificatifs de domicile, puis contrôle la cohérence et l'authenticité avant de scorer le dossier."],
-      ["Que se passe-t-il en cas d'urgence technique la nuit ?", "Le portail de signalement est ouvert 24/7. Le diagnostic guidé écarte les fausses alertes, qualifie la gravité (urgence absolue, intervention rapide, maintenance standard) et déclenche la demande de devis auprès des prestataires de la zone, avec alerte au gestionnaire."],
-      ["Gardons-nous la main sur les décisions ?", "Oui. Obsidia prend le premier niveau et prépare la décision : c'est le gestionnaire qui arbitre, et le propriétaire qui valide les devis. Chaque action, message et document est enregistré dans un journal d'audit infalsifiable."],
-      ["Que couvre exactement le tarif de 10 € par lot ?", "Tous les modules, les utilisateurs illimités de l'agence, les conversations texte et voix illimitées, le connecteur PMS et les espaces propriétaire et locataire. La facturation suit le nombre de lots sous gestion, mois par mois."]
-    ],
-    finalTitle: "L'agence qui ne ressaisit plus rien.",
-    finalSub: "Branchez Obsidia sur votre logiciel de gestion et laissez la plateforme prendre le premier niveau, de la qualification à la quittance.",
-    tagline: "Automatisation pour l'immobilier"
+  /* Header border once scrolled */
+  var head = document.querySelector(".site-head");
+  function onScroll() { head.classList.toggle("scrolled", window.scrollY > 8); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  /* CTA buttons: point to the app (when set) and show a loading state on click */
+  var ctas = document.querySelectorAll("[data-app]");
+  ctas.forEach(function (a) {
+    if (APP_URL) a.href = APP_URL;
+    else { a.setAttribute("role", "button"); a.removeAttribute("href"); a.tabIndex = 0; }
+    var label = a.querySelector(".btn-label");
+    a.dataset.label = label.textContent;
+    a.addEventListener("click", function (e) {
+      if (!APP_URL) { e.preventDefault(); return; }
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      a.classList.add("is-loading");
+      a.setAttribute("aria-busy", "true");
+      label.textContent = "Opening…";
+    });
+  });
+  window.addEventListener("pageshow", function () {
+    ctas.forEach(function (a) {
+      a.classList.remove("is-loading");
+      a.removeAttribute("aria-busy");
+      a.querySelector(".btn-label").textContent = a.dataset.label;
+    });
+  });
+
+  /* Run a callback once when an element enters the viewport */
+  function onView(el, cb, threshold) {
+    if (!el) return;
+    if (reduce || !("IntersectionObserver" in window)) { cb(); return; }
+    var io = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) { io.disconnect(); cb(); }
+    }, { threshold: threshold || 0.35 });
+    io.observe(el);
   }
-};
 
-// --- state ------------------------------------------------------------------
-var state = { lang: DEFAULT_LANG, open: 0 };
-
-// --- helpers ----------------------------------------------------------------
-function esc(s) {
-  return String(s).replace(/[&<>"']/g, function (c) {
-    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+  /* Hero feed: rows arrive one by one, like the live inbox */
+  var rows = document.querySelectorAll(".feed-row");
+  rows.forEach(function (r, i) {
+    setTimeout(function () { r.classList.add("in"); }, reduce ? 0 : 1000 + i * 180);
   });
-}
-function fmtMoney(n, lang) {
-  var loc = lang === "fr" ? "fr-FR" : "en-GB";
-  return new Intl.NumberFormat(loc, { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
-}
-function fmtNum(n, lang) {
-  var loc = lang === "fr" ? "fr-FR" : "en-GB";
-  return new Intl.NumberFormat(loc).format(n);
-}
-function $(sel) { return document.querySelector(sel); }
 
-// --- element refs -----------------------------------------------------------
-var elRev = $("#sim-revenus-range"), elLoyer = $("#sim-loyer-range"), elLots = $("#calc-lots-range");
+  /* Onboarding: swap the listing contacts */
+  var listing = document.getElementById("listing");
+  onView(listing, function () { setTimeout(function () { listing.classList.add("swapped"); }, reduce ? 0 : 400); }, 0.5);
 
-// --- rendering --------------------------------------------------------------
-function fillText(t) {
-  document.querySelectorAll("[data-t]").forEach(function (el) {
-    el.textContent = t[el.getAttribute("data-t")];
+  /* Rating bars fill when visible */
+  var rating = document.getElementById("rating");
+  onView(rating, function () { rating.classList.add("rated"); });
+
+  /* Assistant demo */
+  var QA = [
+    { q: "What's the rent on 12 rue Gambetta?",
+      a: "Apt 3, 12 rue Gambetta: €1,150 rent plus €90 charges. Lease signed 1 March 2024. Next rent review on 1 March 2027." },
+    { q: "When was the last renovation in building B?",
+      a: "Building B, 8 avenue Foch: roof and stairwell renovated in June 2023, €48,200 with Toitures Martin. Next planned work: facade, 2027." },
+    { q: "Which tenants are late this month?",
+      a: "3 tenants, €3,870 in total: apt 2A (€1,240, 9 days), apt 4B (€1,150, 6 days), apt 7 (€1,480, 3 days). Reminders already sent to all three." }
+  ];
+  var chat = document.getElementById("chat");
+  var assistCard = document.querySelector(".assist");
+  var asks = document.querySelectorAll(".ask");
+  var busy = false;
+
+  function el(tag, cls, text) { var n = document.createElement(tag); n.className = cls; if (text) n.textContent = text; return n; }
+  function answer(item) {
+    var a = el("div", "msg-a fade-in", item.a);
+    return a;
+  }
+  function render(i, instant) {
+    var item = QA[i];
+    chat.textContent = "";
+    chat.appendChild(el("div", "msg-q" + (instant ? "" : " fade-in"), item.q));
+    asks.forEach(function (b) { b.setAttribute("aria-pressed", String(+b.dataset.q === i)); });
+    if (instant || reduce) { chat.appendChild(answer(item)); return; }
+    busy = true;
+    asks.forEach(function (b) { b.disabled = true; });
+    var t = el("div", "typing");
+    t.setAttribute("aria-label", "Obsidia is looking it up");
+    t.innerHTML = "<i></i><i></i><i></i>";
+    chat.appendChild(t);
+    assistCard.classList.add("is-thinking");
+    /* Doherty threshold: typing shows at once, the answer lands well under a second */
+    setTimeout(function () {
+      t.remove();
+      assistCard.classList.remove("is-thinking");
+      chat.appendChild(answer(item));
+      busy = false;
+      asks.forEach(function (b) { b.disabled = false; });
+    }, 600);
+  }
+  asks.forEach(function (b) {
+    b.addEventListener("click", function () {
+      if (busy) return;
+      if (mode === "talk") voiceAsk(+b.dataset.q); else render(+b.dataset.q, false);
+    });
   });
-  $("#obs-h1").innerHTML = esc(t.h1a) + "<br />" + esc(t.h1b);
-  document.documentElement.lang = state.lang;
-}
+  render(0, true);
 
-function buildLists(t) {
-  // Inbox
-  $("#obs-inbox").innerHTML = t.inbox.map(function (r, i) {
-    var bg = i === 0 ? "#08090B" : "transparent";
-    return '<div style="display:grid;grid-template-columns:70px 1fr auto;gap:14px;align-items:center;padding:13px 10px;border-radius:9px;background:' + bg + '">' +
-      '<span style="font-family:\'IBM Plex Mono\',monospace;font-size:10px;color:#6A7280;letter-spacing:.08em">' + esc(r[0]) + '</span>' +
-      '<span style="font-size:13px;color:#F5F3EF">' + esc(r[1]) + '</span>' +
-      '<span style="font-size:11px;font-family:\'IBM Plex Mono\',monospace;color:' + r[3] + '">' + esc(r[2]) + '</span>' +
-      '</div>';
-  }).join("");
+  /* ---------- Voice agent (visual demo: no microphone is used) ---------- */
 
-  // Modules
-  $("#obs-modules").innerHTML = t.modules.map(function (m) {
-    var points = m[3].map(function (p) {
-      return '<li style="font-size:13px;color:#F5F3EF;display:flex;gap:10px"><span style="color:#6E5A31">—</span>' + esc(p) + '</li>';
-    }).join("");
-    return '<div class="obs-card" style="background:#14171D;border:1px solid #272C35;border-radius:14px;padding:26px">' +
-      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:#C6A15B">' + esc(m[0]) + '</div>' +
-      '<h3 style="font-size:19px;font-weight:600;margin:12px 0 10px;line-height:1.25">' + esc(m[1]) + '</h3>' +
-      '<p style="margin:0 0 16px;color:#868C97;font-size:14px;line-height:1.6">' + esc(m[2]) + '</p>' +
-      '<ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px">' + points + '</ul>' +
-      '</div>';
-  }).join("");
+  /* Waveform driven by a 0–1 level; it also squashes the orb with the voice */
+  function makeWave(el, n, orbEl) {
+    for (var k = 0; k < n; k++) el.appendChild(document.createElement("i"));
+    var bars = el.children, amp = 0, target = 0, raf = 0, lastT = 0;
+    function frame(t) {
+      amp += (target - amp) * 0.18;
+      if (t - lastT > 85) {
+        lastT = t;
+        var maxH = el.clientHeight || 30;
+        for (var i = 0; i < bars.length; i++) {
+          var env = Math.sin(Math.PI * (i + 0.5) / bars.length);
+          bars[i].style.height = (4 + amp * (0.3 + Math.random() * 0.7) * env * (maxH - 4)).toFixed(1) + "px";
+        }
+        if (orbEl) {
+          var j = amp * Math.random();
+          orbEl.style.setProperty("--sx", (1 + j * 0.07).toFixed(3));
+          orbEl.style.setProperty("--sy", (1 - j * 0.05).toFixed(3));
+        }
+      }
+      if (target > 0 || amp > 0.02) { raf = requestAnimationFrame(frame); return; }
+      raf = 0;
+      for (var q = 0; q < bars.length; q++) bars[q].style.height = "4px";
+      if (orbEl) { orbEl.style.setProperty("--sx", 1); orbEl.style.setProperty("--sy", 1); }
+    }
+    return { set: function (a) { target = a; if (!raf && !reduce) raf = requestAnimationFrame(frame); } };
+  }
+  function typeWords(node, text, ms, isLive, done) {
+    if (reduce) { node.textContent = text; if (done) done(); return; }
+    var w = text.split(" "), i = 0;
+    node.textContent = "";
+    (function step() {
+      if (!isLive()) return;
+      node.textContent = w.slice(0, ++i).join(" ");
+      if (i < w.length) setTimeout(step, ms); else if (done) done();
+    })();
+  }
+  function later(fn, ms, isLive) { setTimeout(function () { if (isLive()) fn(); }, reduce ? 0 : ms); }
+  function setOrb(o, st) { o.setAttribute("data-state", st); }
 
-  // Qualification chips
-  $("#obs-qualchips").innerHTML = t.qualChips.map(function (c) {
-    return '<span style="border:1px solid #272C35;border-radius:999px;padding:7px 14px;font-size:12px;color:#868C97">' + esc(c) + '</span>';
-  }).join("");
+  /* Segmented control with a sliding thumb */
+  function segInit(wrap, onPick) {
+    var btns = wrap.querySelectorAll(".seg"), thumb = wrap.querySelector(".seg-thumb");
+    function place() {
+      var on = wrap.querySelector(".seg.is-on");
+      thumb.style.setProperty("--x", on.offsetLeft + "px");
+      thumb.style.setProperty("--w", on.offsetWidth + "px");
+    }
+    function select(b) {
+      btns.forEach(function (x) { x.classList.toggle("is-on", x === b); x.setAttribute("aria-pressed", String(x === b)); });
+      place();
+    }
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () { if (b.classList.contains("is-on")) return; select(b); onPick(b); });
+    });
+    place();
+    window.addEventListener("resize", place);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(place);
+    return { select: select };
+  }
 
-  // Incident timeline
-  $("#obs-timeline").innerHTML = t.timeline.map(function (s) {
-    return '<div style="background:#14171D;padding:24px">' +
-      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:11px;color:' + s[1] + '">' + esc(s[0]) + '</div>' +
-      '<div style="font-size:15px;font-weight:600;margin-top:10px">' + esc(s[2]) + '</div>' +
-      '<p style="margin:8px 0 0;font-size:13px;color:#868C97;line-height:1.55">' + esc(s[3]) + '</p>' +
-      '</div>';
-  }).join("");
-
-  // Comparison
-  $("#obs-cmp-without").innerHTML = t.without.map(function (x) {
-    return '<li style="display:flex;gap:12px;font-size:14px;color:#868C97;line-height:1.5"><span style="color:#F0766A">×</span>' + esc(x) + '</li>';
-  }).join("");
-  $("#obs-cmp-with").innerHTML = t.with.map(function (x) {
-    return '<li style="display:flex;gap:12px;font-size:14px;color:#F5F3EF;line-height:1.5"><span style="color:#6FD8C4">✓</span>' + esc(x) + '</li>';
-  }).join("");
-
-  // Price included
-  $("#obs-price-included").innerHTML = t.priceIncluded.map(function (x) {
-    return '<li style="display:flex;gap:12px;font-size:14px;color:#F5F3EF;line-height:1.5"><span style="color:#6FD8C4">✓</span>' + esc(x) + '</li>';
-  }).join("");
-
-  // Stats
-  $("#obs-stats").innerHTML = t.stats.map(function (s) {
-    return '<div style="background:#14171D;border:1px solid #272C35;border-radius:14px;padding:28px">' +
-      '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:38px;color:#C6A15B">' + esc(s[0]) + '</div>' +
-      '<div style="font-size:14px;color:#868C97;margin-top:10px;line-height:1.5">' + esc(s[1]) + '</div>' +
-      '</div>';
-  }).join("");
-
-  // FAQ
-  $("#obs-faq").innerHTML = t.faq.map(function (f, i) {
-    var opened = state.open === i;
-    return '<div data-faq-item="' + i + '" style="border-bottom:1px solid #272C35">' +
-      '<button data-faq="' + i + '" type="button" class="obs-faq-btn" style="width:100%;background:transparent;border:0;padding:22px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;text-align:left;color:#F5F3EF;font-family:\'Schibsted Grotesk\',sans-serif;font-size:16px;font-weight:500;cursor:pointer">' +
-      '<span>' + esc(f[0]) + '</span>' +
-      '<span data-faq-sign style="color:#C6A15B;font-family:\'IBM Plex Mono\',monospace;font-size:18px;flex:none">' + (opened ? "−" : "+") + '</span>' +
-      '</button>' +
-      '<div data-faq-panel style="max-height:' + (opened ? "340px" : "0px") + ';overflow:hidden;transition:max-height .32s ease">' +
-      '<p style="margin:0;padding:0 40px 24px 0;color:#868C97;font-size:15px;line-height:1.65">' + esc(f[1]) + '</p>' +
-      '</div>' +
-      '</div>';
-  }).join("");
-}
-
-function updateFaqOpen() {
-  document.querySelectorAll("[data-faq-item]").forEach(function (item) {
-    var i = +item.getAttribute("data-faq-item");
-    var opened = state.open === i;
-    item.querySelector("[data-faq-sign]").textContent = opened ? "−" : "+";
-    item.querySelector("[data-faq-panel]").style.maxHeight = opened ? "340px" : "0px";
+  /* Assistant: Type or Talk */
+  var voice = document.getElementById("voice"), orb = document.getElementById("orb"), mic = document.getElementById("mic");
+  var vState = document.getElementById("voiceState"), vYou = document.getElementById("vYou");
+  var vAgent = document.getElementById("vAgent"), vAgentLine = document.getElementById("vAgentLine");
+  var vWave = makeWave(document.getElementById("voiceWave"), 32, orb);
+  var mode = "talk", vRun = 0, nextQ = 0;
+  function lockAsks(on) { busy = on; asks.forEach(function (b) { b.disabled = on; }); }
+  function voiceStop() {
+    vRun++; vWave.set(0); setOrb(orb, "idle"); mic.classList.remove("is-live"); lockAsks(false);
+    vState.textContent = "Tap the mic or pick a question";
+  }
+  function voiceAsk(i) {
+    var id = ++vRun, live = function () { return id === vRun; }, item = QA[i];
+    nextQ = (i + 1) % QA.length;
+    lockAsks(true);
+    asks.forEach(function (b) { b.setAttribute("aria-pressed", String(+b.dataset.q === i)); });
+    mic.classList.add("is-live"); setOrb(orb, "listening"); vState.textContent = "Listening…"; vWave.set(0.35);
+    vAgent.textContent = ""; vAgentLine.classList.add("is-off");
+    typeWords(vYou, item.q, 120, live, function () {
+      mic.classList.remove("is-live"); setOrb(orb, "thinking"); vState.textContent = "Looking it up…"; vWave.set(0.06);
+      later(function () {
+        setOrb(orb, "speaking"); vState.textContent = "Answering"; vWave.set(1); vAgentLine.classList.remove("is-off");
+        typeWords(vAgent, item.a, 75, live, function () {
+          vWave.set(0); setOrb(orb, "idle"); vState.textContent = "Ask another question or tap the mic"; lockAsks(false);
+        });
+      }, 380, live);
+    });
+  }
+  mic.addEventListener("click", function () { if (!busy) voiceAsk(nextQ); });
+  segInit(assistCard.querySelector(".seg-wrap"), function (b) {
+    mode = b.dataset.mode;
+    var talk = mode === "talk";
+    voiceStop();
+    voice.hidden = !talk; chat.hidden = talk;
+    if (!talk) render(+assistCard.querySelector('.ask[aria-pressed="true"]').dataset.q, true);
   });
-}
-
-function updateSim() {
-  var lang = state.lang, t = COPY[lang];
-  var revenus = +elRev.value, loyer = +elLoyer.value;
-  var taux = (loyer / revenus) * 100;
-  var ok = taux <= 33, mid = taux > 33 && taux <= 36;
-  var color = ok ? "#6FD8C4" : (mid ? "#C6A15B" : "#F0766A");
-  $("#sim-revenus").textContent = fmtMoney(revenus, lang);
-  $("#sim-loyer").textContent = fmtMoney(loyer, lang);
-  $("#sim-taux").textContent = taux.toFixed(1).replace(".", lang === "fr" ? "," : ".") + " %";
-  $("#sim-status-dot").style.background = color;
-  $("#sim-status-label").textContent = ok ? t.ok : (mid ? t.mid : t.ko);
-  var gauge = $("#sim-gauge");
-  gauge.style.background = color;
-  gauge.style.width = Math.min(100, taux * 2) + "%";
-}
-
-function updateCalc() {
-  var lang = state.lang;
-  var lots = +elLots.value, monthly = lots * 10;
-  $("#calc-lots").textContent = fmtNum(lots, lang);
-  $("#calc-monthly").textContent = fmtMoney(monthly, lang) + (lang === "fr" ? " / mois" : " / mo");
-  $("#calc-yearly").textContent = fmtMoney(monthly * 12, lang);
-}
-
-function updateLangButtons() {
-  var en = $("#lang-en"), fr = $("#lang-fr");
-  en.style.background = state.lang === "en" ? "#C6A15B" : "transparent";
-  en.style.color = state.lang === "en" ? "#08090B" : "#868C97";
-  fr.style.background = state.lang === "fr" ? "#C6A15B" : "transparent";
-  fr.style.color = state.lang === "fr" ? "#08090B" : "#868C97";
-}
-
-function applyLang(lang) {
-  state.lang = lang;
-  try { localStorage.setItem("obsidia.lang", lang); } catch (e) {}
-  var t = COPY[lang] || COPY.en;
-  fillText(t);
-  buildLists(t);
-  updateSim();
-  updateCalc();
-  updateLangButtons();
-}
-
-// --- init -------------------------------------------------------------------
-(function init() {
-  // app links
-  document.querySelectorAll(".obs-app").forEach(function (a) { a.setAttribute("href", APP_URL); });
-  // comparison toggle
-  if (!SHOW_COMPARISON) { var cmp = $("#comparaison"); if (cmp) cmp.style.display = "none"; }
-  // saved language
-  var saved = null;
-  try { saved = localStorage.getItem("obsidia.lang"); } catch (e) {}
-  state.lang = (saved === "fr" || saved === "en") ? saved : DEFAULT_LANG;
-  // wire controls
-  $("#lang-en").addEventListener("click", function () { applyLang("en"); });
-  $("#lang-fr").addEventListener("click", function () { applyLang("fr"); });
-  elRev.addEventListener("input", updateSim);
-  elLoyer.addEventListener("input", updateSim);
-  elLots.addEventListener("input", updateCalc);
-  $("#obs-faq").addEventListener("click", function (e) {
-    var btn = e.target.closest("[data-faq]");
-    if (!btn) return;
-    var i = +btn.getAttribute("data-faq");
-    state.open = state.open === i ? -1 : i;
-    updateFaqOpen();
+  onView(assistCard, function () {
+    later(function () { if (mode === "talk" && !busy) voiceAsk(0); }, 500, function () { return true; });
   });
-  // first paint
-  applyLang(state.lang);
+
+  /* Phone card: the agent answers a prospect, then calls a tenant */
+  var CALLS = [
+    { dir: "Incoming · 23:47", who: "Léa Martin, prospect",
+      lines: [["caller", "Caller", "Is the flat on rue Gambetta still available?"],
+              ["agent", "Obsidia", "Yes, from 1 December. Rent is €1,150 plus €90 charges. Can I take your details?"]],
+      out: ["Name", "Phone", "Income", "Move-in date"] },
+    { dir: "Outgoing · 10:05", who: "Claire Durand, tenant apt 7",
+      lines: [["agent", "Obsidia", "Hello Ms Durand, Obsidia calling for your landlord. Your November rent of €1,480 hasn't arrived yet. When can you pay it?"],
+              ["caller", "Tenant", "Sorry, I forgot. I'll send it tomorrow."],
+              ["agent", "Obsidia", "Noted for Friday 20 November. I'll text you a confirmation."]],
+      out: ["Payment promised · Fri 20 Nov", "Logged in CRM"] }
+  ];
+  var callEl = document.getElementById("call"), callOrb = callEl.querySelector(".orb");
+  var callLines = document.getElementById("callLines"), callOut = document.getElementById("callOut");
+  var callDir = document.getElementById("callDir"), callWho = document.getElementById("callWho"), callTime = document.getElementById("callTime");
+  var cWave = makeWave(document.getElementById("callWave"), 40, callOrb);
+  var cRun = 0, cTick = 0, touched = false, callSeg;
+  function mmss(s) { return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }
+  function playCall(n) {
+    var id = ++cRun, live = function () { return id === cRun; }, c = CALLS[n], secs = 0, k = 0;
+    clearInterval(cTick);
+    callDir.textContent = c.dir; callWho.textContent = c.who;
+    callLines.textContent = ""; callOut.textContent = "";
+    callTime.textContent = "00:00"; callTime.classList.add("is-live");
+    cTick = setInterval(function () { if (live()) callTime.textContent = mmss(++secs); }, 1000);
+    function finish() {
+      setOrb(callOrb, "idle"); cWave.set(0); clearInterval(cTick); callTime.classList.remove("is-live");
+      if (reduce) callTime.textContent = n === 0 ? "03:12" : "01:04";
+      c.out.forEach(function (o, i) {
+        var s = document.createElement("span");
+        s.className = "pill pop"; s.style.animationDelay = i * 90 + "ms";
+        s.innerHTML = '<svg class="i" aria-hidden="true"><use href="#i-check"/></svg>';
+        s.appendChild(document.createTextNode(o));
+        callOut.appendChild(s);
+      });
+      if (n === 0 && !touched && !reduce) later(function () { callSeg.select(callEl.querySelector('[data-call="1"]')); playCall(1); }, 2800, live);
+    }
+    (function nextLine() {
+      if (!live()) return;
+      if (k >= c.lines.length) { finish(); return; }
+      var L = c.lines[k++], p = document.createElement("p"), who = document.createElement("span"), txt = document.createElement("span");
+      p.className = "cline in " + L[0]; who.className = "who"; who.textContent = L[1];
+      p.appendChild(who); p.appendChild(txt); callLines.appendChild(p);
+      var agent = L[0] === "agent";
+      setOrb(callOrb, agent ? "speaking" : "listening"); cWave.set(agent ? 1 : 0.3);
+      typeWords(txt, L[2], 70, live, function () { cWave.set(0.05); later(nextLine, 450, live); });
+    })();
+  }
+  callSeg = segInit(callEl.querySelector(".seg-wrap"), function (b) { touched = true; playCall(+b.dataset.call); });
+  onView(callEl, function () { playCall(0); });
+
+  /* Pricing calculator: slider and a forgiving text field (Postel's law) */
+  var range = document.getElementById("units");
+  var unitsIn = document.getElementById("unitsIn");
+  var perMonth = document.getElementById("perMonth");
+  var perYear = document.getElementById("perYear");
+  var fmt = new Intl.NumberFormat("en-GB");
+  var MAX_UNITS = 20000;
+
+  /* Accepts "1200", "1 200", "1,200", "1.200", "1.2k", "350 units", "about 400" */
+  function parseUnits(raw) {
+    var s = String(raw).toLowerCase().replace(/units?|lots?|logements?|appartements?|flats?|about|approx\.?|~/g, "").trim();
+    var k = /\d\s*k$/.test(s);
+    s = s.replace(/k$/, "").replace(/[\s'’_]/g, "");
+    if (/^\d{1,3}([.,]\d{3})+$/.test(s)) s = s.replace(/[.,]/g, "");   // thousands separators
+    else s = s.replace(",", ".");                                       // decimal comma
+    var n = parseFloat(s.replace(/[^0-9.]/g, ""));
+    if (!isFinite(n)) return null;
+    if (k) n *= 1000;
+    return Math.min(MAX_UNITS, Math.max(1, Math.round(n)));
+  }
+  function bump(node) { node.classList.remove("bump"); void node.offsetWidth; node.classList.add("bump"); }
+  var last = null;
+  /* Team size from the page's own figures: 80–100 units per manager today, 250–350 with Obsidia */
+  var mgrToday = document.getElementById("mgrToday"), mgrObs = document.getElementById("mgrObs");
+  var barToday = document.getElementById("barToday"), barObs = document.getElementById("barObs");
+  var mgrSave = document.getElementById("mgrSave");
+  function team(u) {
+    var today = Math.max(1, Math.ceil(u / 90)), obs = Math.max(1, Math.ceil(u / 300));
+    if (mgrToday.textContent !== String(today) && last !== null && !reduce) bump(mgrToday);
+    if (mgrObs.textContent !== String(obs) && last !== null && !reduce) bump(mgrObs);
+    mgrToday.textContent = today; mgrObs.textContent = obs;
+    barToday.style.transform = "scaleX(1)";
+    barObs.style.transform = "scaleX(" + (obs / today) + ")";
+    var saved = today - obs;
+    mgrSave.textContent = saved > 0 ? saved + " fewer" : "Same team";
+  }
+  function show(u, fromField) {
+    perMonth.textContent = "€" + fmt.format(u * 10);
+    perYear.textContent = "€" + fmt.format(u * 120);
+    team(u);
+    if (!fromField) unitsIn.value = fmt.format(u);
+    var r = Math.min(+range.max, Math.max(+range.min, u));
+    if (fromField) range.value = r;
+    range.style.setProperty("--p", ((r - range.min) / (range.max - range.min) * 100) + "%");
+    if (last !== null && last !== u && !reduce) { bump(perMonth); bump(perYear); }
+    last = u;
+  }
+  range.addEventListener("input", function () { show(+range.value, false); });
+  unitsIn.addEventListener("input", function () { var u = parseUnits(unitsIn.value); if (u !== null) show(u, true); });
+  unitsIn.addEventListener("blur", function () { var u = parseUnits(unitsIn.value); show(u === null ? +range.value : u, false); });
+  unitsIn.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") unitsIn.blur();
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      var u = (parseUnits(unitsIn.value) || +range.value) + (e.key === "ArrowUp" ? 10 : -10);
+      show(Math.min(MAX_UNITS, Math.max(1, u)), false);
+    }
+  });
+  show(+range.value, false);
+
+  /* ---------- Motion ---------- */
+
+  /* Theme toggle (light mode is opt-in) */
+  var toggle = document.getElementById("themeToggle");
+  function setThemeLabel() {
+    var light = doc.getAttribute("data-theme") === "light";
+    toggle.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", light ? "#F5F3EF" : "#08090B");
+  }
+  toggle.addEventListener("click", function () {
+    var light = doc.getAttribute("data-theme") !== "light";
+    if (light) doc.setAttribute("data-theme", "light"); else doc.removeAttribute("data-theme");
+    try { localStorage.setItem("obsidia.theme", light ? "light" : "dark"); } catch (e) {}
+    toggle.classList.remove("spun"); void toggle.offsetWidth; toggle.classList.add("spun");
+    setThemeLabel();
+  });
+  setThemeLabel();
+
+  /* Strike-through spans for the "Before" list */
+  document.querySelectorAll(".day-before li").forEach(function (li, i) {
+    var t = li.lastChild;
+    if (t && t.nodeType === 3 && t.textContent.trim()) {
+      var s = document.createElement("span");
+      s.className = "strike"; s.textContent = t.textContent; s.style.setProperty("--i", i);
+      li.replaceChild(s, t);
+    }
+  });
+
+  /* Reveal groups and staggered lists */
+  var revealSel = ".sec-head, .listing, .features .card, .day, .result, .price-card, .final .h2, .final .lead, .final .cta-row";
+  var staggerSel = ".steps, #rating, .collected, .log, .tl, .day-after ul, .incl";
+  var groups = new Map();
+  document.querySelectorAll(revealSel).forEach(function (n) {
+    n.setAttribute("data-reveal", "");
+    var p = n.parentElement, k = groups.get(p) || 0;
+    n.style.setProperty("--d", (k % 3) * 90 + "ms");
+    groups.set(p, k + 1);
+  });
+  document.querySelectorAll(staggerSel).forEach(function (n) {
+    n.setAttribute("data-stagger", "");
+    Array.prototype.forEach.call(n.children, function (c, i) { c.style.setProperty("--i", i); });
+  });
+  var watched = document.querySelectorAll("[data-reveal], [data-stagger]");
+  if (reduce || !("IntersectionObserver" in window)) {
+    watched.forEach(function (n) { n.classList.add("is-in"); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.2, rootMargin: "0px 0px -8% 0px" });
+    watched.forEach(function (n) { io.observe(n); });
+  }
+
+  /* Scores count up as the bars fill (exaggerated feedback, kept short) */
+  onView(rating, function () {
+    rating.querySelectorAll(".score b").forEach(function (b, i) {
+      var to = +b.textContent; if (reduce) return;
+      var t0 = performance.now() + 500 + i * 60, dur = 800;
+      b.textContent = "0";
+      (function tick(now) {
+        var p = Math.min(1, Math.max(0, (now - t0) / dur));
+        b.textContent = Math.round(to * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(tick);
+      })(performance.now());
+    });
+  });
+
+  /* 3D tilt of the product frame, following the pointer */
+  var prod = document.querySelector(".product");
+  if (!reduce && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    prod.addEventListener("pointermove", function (e) {
+      var r = prod.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      prod.style.transform = "perspective(1600px) rotateX(" + (-y * 3).toFixed(2) + "deg) rotateY(" + (x * 4).toFixed(2) + "deg)";
+    });
+    prod.addEventListener("pointerleave", function () { prod.style.transform = ""; });
+  }
+
+  /* Mobile dock: visible between the hero and the final CTA */
+  var dock = document.getElementById("dock");
+  var heroIn = true, finalIn = false;
+  function updateDock() {
+    var show = !heroIn && !finalIn;
+    dock.classList.toggle("show", show);
+    if (show) dock.removeAttribute("inert"); else dock.setAttribute("inert", "");
+  }
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (en) { heroIn = en[0].isIntersecting; updateDock(); }, { rootMargin: "-40% 0px 0px 0px" }).observe(document.querySelector(".hero-copy"));
+    /* Hidden over the final CTA and the footer, which carry their own action and glass */
+    var endIn = new Map();
+    var endIo = new IntersectionObserver(function (en) {
+      en.forEach(function (e) { endIn.set(e.target, e.isIntersecting); });
+      finalIn = Array.from(endIn.values()).some(Boolean); updateDock();
+    });
+    endIo.observe(document.querySelector(".final"));
+    endIo.observe(document.querySelector(".site-foot"));
+  }
 })();
 </script>
 </body>

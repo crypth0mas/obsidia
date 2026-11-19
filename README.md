@@ -1,19 +1,17 @@
 # Obsidia — Landing page
 
-Landing page for **Obsidia**, automation for long-term rental management (six modules
-covering the rental cycle end to end, PMS connectors, screening, incidents and billing).
+Landing page for **Obsidia**: AI that answers every call, email and WhatsApp for rental
+listings, rates applicants, fills the CRM and handles tenants after letting. Managers keep
+only viewings, key check-in and key check-out.
 
-Static, bilingual (EN/FR) single page — no build step, no framework, no image assets.
+Static single page in English — no build step, no framework, no image assets.
 Open `index.html` or serve the folder as-is.
 
-## Features
+## Sections
 
-- **Bilingual EN/FR** toggle in the header, persisted in `localStorage` (`obsidia.lang`).
-- **Affordability simulator** — two range sliders compute the live rent-to-income ratio,
-  eligibility status and gauge.
-- **Pricing calculator** — a slider estimates monthly / yearly cost at €10 / unit.
-- **FAQ accordion** with smooth expand/collapse.
-- Fully responsive via intrinsic `auto-fit` grids and `clamp()` type — no media queries needed.
+Hero with a live "Today" product view · Onboarding (swap the contacts on a listing) ·
+Six features (applicant rating as the main card, interactive portfolio assistant) ·
+The manager's new day (the one light section) · Pricing with a unit calculator · Final CTA.
 
 ## Preview locally
 
@@ -31,18 +29,18 @@ no build command, root output).
 
 ## Configuration
 
-Three values live at the top of the `<script>` in `index.html`:
+- `APP_URL` at the top of the `<script>` in `index.html`. Empty by default: there is no app
+  yet, so every "Get started" button keeps its look and press feedback but goes nowhere.
+  Set a URL and the buttons open it with a loading state.
+- `img/apartment.webp` (1200×800) is the listing photo in the onboarding section. Without
+  the file the card falls back to a plain floor-plan sketch.
 
-| Constant | Default | Purpose |
-|----------|---------|---------|
-| `APP_URL` | `https://obsidia.base44.app` | Destination of every "Open the application" button |
-| `DEFAULT_LANG` | `en` | Language shown before a visitor picks one |
-| `SHOW_COMPARISON` | `true` | Show/hide the "with vs without Obsidia" section |
+## Themes and motion
 
-## Origin
-
-Implemented from the Obsidia design-code source (`Obsidia Landing.dc.html`), which required a
-proprietary runtime (`support.js`). Its `DCLogic` component — translations, simulators and FAQ —
-has been reimplemented in vanilla JS so the page runs standalone. Type (Instrument Serif,
-Schibsted Grotesk, IBM Plex Mono) is loaded from Google Fonts; every style value is preserved
-from the source.
+- Light is the default. A header toggle switches to dark, saved in `localStorage`
+  (`obsidia.theme`). In light mode the "manager's new day" section is the one dark
+  section, and lime stays a block behind dark text.
+- Fluted glass sits behind the hero and the footer (the footer refracts the wordmark).
+- The pricing simulator also shows managers needed: units ÷ 90 today vs units ÷ 300 with
+  Obsidia (midpoints of 80–100 and 250–350).
+- All motion respects `prefers-reduced-motion`: content shows at once, loops stop.
