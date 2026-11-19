@@ -35,6 +35,12 @@ no build command, root output).
 - `img/apartment.webp` (1200×800) is the listing photo in the onboarding section. Without
   the file the card falls back to a plain floor-plan sketch.
 
+## Analytics
+
+Vercel Web Analytics is loaded with the static-site snippet (`/_vercel/insights/script.js`),
+not the `@vercel/analytics` npm package, since the site has no build step. Enable it in the
+Vercel project (Analytics tab). The script is skipped on localhost.
+
 ## Themes and motion
 
 - Light is the default. A header toggle switches to dark, saved in `localStorage`
