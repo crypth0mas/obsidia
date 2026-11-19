@@ -449,12 +449,22 @@ p { text-wrap: pretty; }
 .calc-units { font: 500 15px/1 var(--font-body); }
 .calc-units b { font-weight: 600; font-size: 22px; }
 input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; margin-top: 18px; cursor: pointer; }
-input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(var(--brass), var(--brass)) 0 / var(--p, 30%) 100% no-repeat, var(--line); }
+input[type=range]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(var(--brass), var(--brass)) 0 / calc(10px + (100% - 20px) * var(--f, .16)) 100% no-repeat, var(--line); }
 input[type=range]::-moz-range-track { height: 4px; border-radius: 2px; background: var(--line); }
 input[type=range]::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--brass); }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -8px; border-radius: 50%; background: var(--ivory); border: 4px solid var(--brass); }
 input[type=range]::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--ivory); border: 4px solid var(--brass); }
-.scale { display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; color: var(--ash); }
+/* Scale labels sit under the thumb's centre: the thumb (20px) travels from 10px to 100% - 10px */
+.scale { position: relative; height: 30px; margin-top: 2px; font-size: 12px; }
+.scale button {
+  position: absolute; top: 0; left: calc(10px + (100% - 20px) * var(--f));
+  transform: translateX(-50%); padding: 6px 10px; border: 0; border-radius: 6px;
+  background: none; color: var(--ash); font: inherit; cursor: pointer;
+  transition: color .15s ease, background-color .15s ease;
+}
+.scale button:hover { color: var(--ivory); background: color-mix(in srgb, var(--line) 50%, transparent); }
+.scale button:active { transform: translateX(-50%) scale(.94); }
+.scale button.on { color: var(--ivory); }
 .team { margin-top: 26px; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--graphite); }
 .team-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
 .team-save { font-size: 13px; font-weight: 500; color: var(--teal); transition: opacity .2s ease; }
@@ -840,6 +850,64 @@ input[type=range] { height: 32px; }
 .wave-sm { height: 22px; margin: 12px 0 4px; }
 [data-theme="light"] .wave i { background: #A88645; }
 
+/* Agent in the surprise accent (acid lime) with a grain aura.
+   The aura is a lime radial glow masked by fractal noise, so it dissolves into grain. */
+.agent-orb { position: relative; display: grid; place-items: center; flex: none; --amp: 0; }
+.agent-aura {
+  position: absolute; inset: -46%; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(212,255,58,.95) 0, rgba(212,255,58,.6) 38%, rgba(212,255,58,.18) 70%, rgba(212,255,58,0) 100%);
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4.2 0 0 0 -1.5'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+          mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4.2 0 0 0 -1.5'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+  -webkit-mask-size: 160px 160px; mask-size: 160px 160px;
+  opacity: calc(.42 + var(--amp) * .3);
+  transform: scale(calc(.94 + var(--amp) * .14));
+  transition: opacity .2s ease-out, transform .2s ease-out;
+}
+.agent-orb-sm .agent-aura { inset: -50%; -webkit-mask-size: 110px 110px; mask-size: 110px 110px; }
+.agent-orb:has(.orb[data-state="listening"]) .agent-aura,
+.agent-orb:has(.orb[data-state="thinking"]) .agent-aura { animation: aura-breathe 1.6s var(--ease-in-out) infinite; }
+@keyframes aura-breathe { 0%, 100% { transform: scale(.95); opacity: .4; } 50% { transform: scale(1.04); opacity: .6; } }
+[data-theme="light"] .agent-aura { background: radial-gradient(closest-side, rgba(212,255,58,.9) 0, rgba(190,235,30,.6) 40%, rgba(126,156,18,.22) 70%, rgba(126,156,18,0) 100%); }
+/* room for the aura inside the panels */
+.voice-stage .agent-orb { margin: 6px 4px 6px 12px; }
+.call-head .agent-orb { margin: 2px 2px 2px 6px; }
+
+.orb {
+  background: radial-gradient(circle at 34% 28%, #F6FFD0 0, #D4FF3A 46%, #7E9C12 100%);
+  box-shadow: inset 0 -8px 16px rgba(50,66,0,.35), 0 6px 14px -8px rgba(50,66,0,.4);
+}
+.orb::after { background: repeating-linear-gradient(90deg, rgba(255,255,255,.4) 0, rgba(255,255,255,0) 2.5px, rgba(40,55,0,.2) 6px, rgba(255,255,255,.38) 7px); }
+.orb-sm::after { background: repeating-linear-gradient(90deg, rgba(255,255,255,.4) 0, rgba(255,255,255,0) 1.5px, rgba(40,55,0,.2) 3.5px, rgba(255,255,255,.38) 4px); }
+.orb-ring { border-color: #D4FF3A; }
+[data-theme="light"] .orb-ring { border-color: #9DBE1A; }
+/* keep the aura inside the demo panels */
+.call, .assist .visual { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) { .agent-aura { animation: none !important; transform: none; } }
+
+/* Final CTA: the agent listening, and the work it handles scrolling past */
+.final { padding: 120px 0 104px; overflow: hidden; }
+.final-agent { display: flex; justify-content: center; margin-bottom: 30px; }
+.ticker {
+  margin-top: 80px; display: grid; gap: 12px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+.ticker-row { display: flex; width: max-content; animation: marquee 60s linear infinite; }
+.ticker-row.rev { animation-direction: reverse; animation-duration: 70s; }
+.ticker:hover .ticker-row { animation-play-state: paused; }
+.ticker-set { display: flex; }
+.tick {
+  display: inline-flex; align-items: center; gap: 10px; margin-right: 12px;
+  padding: 10px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--graphite);
+  font-size: 14px; white-space: nowrap; text-align: left;
+}
+.tick .i { width: 16px; height: 16px; color: var(--brass); }
+[data-theme="light"] .tick .i { color: #7D6434; }
+.tick time { font: 400 12px/1 var(--font-mono); color: var(--ash); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+@media (max-width: 760px) { .final { padding: 96px 0 88px; } .ticker { margin-top: 56px; } .tick { font-size: 13px; padding: 9px 14px; } }
+@media (prefers-reduced-motion: reduce) { .ticker-row { animation: none; } }
+
 /* Segmented control (Type / Talk, call examples) */
 .seg-wrap { position: relative; display: inline-flex; align-self: flex-start; max-width: 100%; padding: 3px; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--graphite); }
 .seg {
@@ -1114,7 +1182,7 @@ input[type=range] { height: 32px; }
             <span class="seg-thumb" aria-hidden="true"></span>
           </div>
           <div class="call-head">
-            <div class="orb orb-sm" data-state="idle" aria-hidden="true"><span class="orb-ring"></span><span class="orb-ring"></span></div>
+            <div class="agent-orb agent-orb-sm" aria-hidden="true"><span class="agent-aura"></span><div class="orb orb-sm" data-state="idle"><span class="orb-ring"></span><span class="orb-ring"></span></div></div>
             <div class="call-id"><b>Obsidia agent</b><span class="call-meta"><span id="callDir">Incoming</span> · <span id="callWho">Léa Martin, prospect</span></span></div>
             <span class="call-time num" id="callTime">00:00</span>
           </div>
@@ -1198,7 +1266,7 @@ input[type=range] { height: 32px; }
           <div class="chat" id="chat" aria-live="polite" hidden></div>
           <div class="voice" id="voice">
             <div class="voice-stage">
-              <div class="orb" id="orb" data-state="idle" aria-hidden="true"><span class="orb-ring"></span><span class="orb-ring"></span></div>
+              <div class="agent-orb" aria-hidden="true"><span class="agent-aura"></span><div class="orb" id="orb" data-state="idle"><span class="orb-ring"></span><span class="orb-ring"></span></div></div>
               <div class="voice-mid">
                 <p class="voice-state" id="voiceState">Tap the mic or pick a question</p>
                 <div class="wave" id="voiceWave" aria-hidden="true"></div>
@@ -1286,7 +1354,7 @@ input[type=range] { height: 32px; }
         <label class="v-label" for="units">Your portfolio</label>
         <div class="calc-row"><label class="calc-units"><input id="unitsIn" class="units-in num" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="250" aria-label="Number of units" /> units</label></div>
         <input type="range" id="units" min="10" max="1500" step="10" value="250" aria-describedby="perMonth" />
-        <div class="scale num" aria-hidden="true"><span>10</span><span>500</span><span>1,000</span><span>1,500</span></div>
+        <div class="scale num" id="scale"><button type="button" data-u="10" style="--f:0.0" aria-label="Set 10 units">10</button><button type="button" data-u="500" style="--f:0.3289" aria-label="Set 500 units">500</button><button type="button" data-u="1000" style="--f:0.6644" aria-label="Set 1,000 units">1,000</button><button type="button" data-u="1500" style="--f:1.0" aria-label="Set 1,500 units">1,500</button></div>
         <div class="team" aria-live="polite">
           <div class="team-head"><span class="v-label">Managers needed</span><span class="team-save" id="mgrSave">2 fewer</span></div>
           <div class="team-row"><span class="team-name">Today</span><span class="team-bar"><i id="barToday"></i></span><b class="num" id="mgrToday">3</b></div>
@@ -1306,11 +1374,16 @@ input[type=range] { height: 32px; }
 <!-- Final CTA -->
 <section class="final">
   <div class="wrap">
+    <div class="final-agent" aria-hidden="true"><div class="agent-orb agent-orb-sm"><span class="agent-aura"></span><div class="orb orb-sm" data-state="listening"><span class="orb-ring"></span><span class="orb-ring"></span></div></div></div>
     <h2 class="h2">Grow your portfolio without growing your team.</h2>
     <p class="lead">Change the contacts on your listings today. Obsidia answers the next message.</p>
     <div class="cta-row">
       <a class="btn btn-primary btn-lg" data-app href="#"><span class="spin" aria-hidden="true"></span><span class="btn-label">Get started</span><svg class="i arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
     </div>
+  </div>
+  <div class="ticker" aria-label="Examples of what Obsidia handles">
+    <div class="ticker-row"><div class="ticker-set"><span class="tick"><svg class="i"><use href="#i-phone"/></svg>Call answered · Léa Martin<time class="num">23:47</time></span><span class="tick"><svg class="i"><use href="#i-chat"/></svg>WhatsApp reply in German<time class="num">6 s</time></span><span class="tick"><svg class="i"><use href="#i-rank"/></svg>File rated 94 · Sophie Laurent<time class="num">08:05</time></span><span class="tick"><svg class="i"><use href="#i-cal"/></svg>Viewing booked · 14 rue Gambetta<time class="num">Thu 10:30</time></span><span class="tick"><svg class="i"><use href="#i-receipt"/></svg>Rent reminder sent · Apt 4B<time class="num">09:00</time></span><span class="tick"><svg class="i"><use href="#i-db"/></svg>3 payslips logged in the CRM<time class="num">08:04</time></span></div><div class="ticker-set" aria-hidden="true"><span class="tick"><svg class="i"><use href="#i-phone"/></svg>Call answered · Léa Martin<time class="num">23:47</time></span><span class="tick"><svg class="i"><use href="#i-chat"/></svg>WhatsApp reply in German<time class="num">6 s</time></span><span class="tick"><svg class="i"><use href="#i-rank"/></svg>File rated 94 · Sophie Laurent<time class="num">08:05</time></span><span class="tick"><svg class="i"><use href="#i-cal"/></svg>Viewing booked · 14 rue Gambetta<time class="num">Thu 10:30</time></span><span class="tick"><svg class="i"><use href="#i-receipt"/></svg>Rent reminder sent · Apt 4B<time class="num">09:00</time></span><span class="tick"><svg class="i"><use href="#i-db"/></svg>3 payslips logged in the CRM<time class="num">08:04</time></span></div></div>
+    <div class="ticker-row rev"><div class="ticker-set"><span class="tick"><svg class="i"><use href="#i-tool"/></svg>Plumber booked · Apt 2A<time class="num">Fri 09:00</time></span><span class="tick"><svg class="i"><use href="#i-phone"/></svg>Tenant called · payment promised<time class="num">10:05</time></span><span class="tick"><svg class="i"><use href="#i-mail"/></svg>Email answered · documents list<time class="num">07:12</time></span><span class="tick"><svg class="i"><use href="#i-key"/></svg>Check-in ready · 8 avenue Foch<time class="num">14:00</time></span><span class="tick"><svg class="i"><use href="#i-check"/></svg>€1,150 received · Apt 5<time class="num">13 Nov</time></span><span class="tick"><svg class="i"><use href="#i-ask"/></svg>“Which tenants are late?” answered<time class="num">2 s</time></span></div><div class="ticker-set" aria-hidden="true"><span class="tick"><svg class="i"><use href="#i-tool"/></svg>Plumber booked · Apt 2A<time class="num">Fri 09:00</time></span><span class="tick"><svg class="i"><use href="#i-phone"/></svg>Tenant called · payment promised<time class="num">10:05</time></span><span class="tick"><svg class="i"><use href="#i-mail"/></svg>Email answered · documents list<time class="num">07:12</time></span><span class="tick"><svg class="i"><use href="#i-key"/></svg>Check-in ready · 8 avenue Foch<time class="num">14:00</time></span><span class="tick"><svg class="i"><use href="#i-check"/></svg>€1,150 received · Apt 5<time class="num">13 Nov</time></span><span class="tick"><svg class="i"><use href="#i-ask"/></svg>“Which tenants are late?” answered<time class="num">2 s</time></span></div></div>
   </div>
 </section>
 
@@ -1467,12 +1540,13 @@ var APP_URL = "";
           var j = amp * Math.random();
           orbEl.style.setProperty("--sx", (1 + j * 0.07).toFixed(3));
           orbEl.style.setProperty("--sy", (1 - j * 0.05).toFixed(3));
+          orbEl.parentNode.style.setProperty("--amp", amp.toFixed(3));   /* aura swells with the voice */
         }
       }
       if (target > 0 || amp > 0.02) { raf = requestAnimationFrame(frame); return; }
       raf = 0;
       for (var q = 0; q < bars.length; q++) bars[q].style.height = "4px";
-      if (orbEl) { orbEl.style.setProperty("--sx", 1); orbEl.style.setProperty("--sy", 1); }
+      if (orbEl) { orbEl.style.setProperty("--sx", 1); orbEl.style.setProperty("--sy", 1); orbEl.parentNode.style.setProperty("--amp", 0); }
     }
     return { set: function (a) { target = a; if (!raf && !reduce) raf = requestAnimationFrame(frame); } };
   }
@@ -1664,6 +1738,7 @@ var APP_URL = "";
 
   /* Pricing calculator: slider and a forgiving text field (Postel's law) */
   var range = document.getElementById("units");
+  var scaleBtns = [].slice.call(document.querySelectorAll("#scale button"));
   var unitsIn = document.getElementById("unitsIn");
   var perMonth = document.getElementById("perMonth");
   var perYear = document.getElementById("perYear");
@@ -1705,11 +1780,15 @@ var APP_URL = "";
     if (!fromField) unitsIn.value = fmt.format(u);
     var r = Math.min(+range.max, Math.max(+range.min, u));
     if (fromField) range.value = r;
-    range.style.setProperty("--p", ((r - range.min) / (range.max - range.min) * 100) + "%");
+    range.style.setProperty("--f", ((r - range.min) / (range.max - range.min)).toFixed(4));
+    scaleBtns.forEach(function (b) { b.classList.toggle("on", +b.dataset.u === u); });
     if (last !== null && last !== u && !reduce) { bump(perMonth); bump(perYear); }
     last = u;
   }
   range.addEventListener("input", function () { show(+range.value, false); });
+  scaleBtns.forEach(function (b) {
+    b.addEventListener("click", function () { var u = +b.dataset.u; range.value = u; show(u, false); });
+  });
   unitsIn.addEventListener("input", function () { var u = parseUnits(unitsIn.value); if (u !== null) show(u, true); });
   unitsIn.addEventListener("blur", function () { var u = parseUnits(unitsIn.value); show(u === null ? +range.value : u, false); });
   unitsIn.addEventListener("keydown", function (e) {
